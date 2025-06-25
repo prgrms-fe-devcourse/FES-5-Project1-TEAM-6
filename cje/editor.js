@@ -91,6 +91,14 @@ function renderEditor() {
   preview.id = "preview_area";
   preview.innerHTML = window.marked.parse(state.content);
 
+  // textarea(마크다운) + preview 묶기
+  const editorArea = document.createElement("div");
+  editorArea.className = "editor_area";
+
+  if (state.isEditing) editorArea.appendChild(textarea);
+  editorArea.appendChild(preview);
+  wrapper.append(titleArea, meta, editorArea);
+
   //실시간 preview + localStorage 저장
   textarea.addEventListener("input", () => {
     const val = textarea.value;
@@ -151,9 +159,6 @@ function renderEditor() {
     });
   });
 
-  wrapper.append(titleArea, meta);
-  if (state.isEditing) wrapper.appendChild(textarea); //수정중이면 마크다운 보여줌
-  wrapper.appendChild(preview);
   app.appendChild(wrapper);
 }
 

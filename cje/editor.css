@@ -21,13 +21,6 @@ body {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
-.title_area {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
 /* 마크다운 */
 #markdown_input {
   width: 100%;
@@ -118,7 +111,7 @@ body {
 /*  */
 
 /* 제목 영역 정렬 */
-.title-area {
+.title_area {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -148,8 +141,48 @@ body {
   margin-right: 1rem;
 }
 
-/* 버튼 그룹 정렬 */
-.button-group {
+.editor_area {
   display: flex;
-  gap: 0.5rem;
+  flex-direction: row; /* 기본값이긴 하지만 명시해주자 */
+  gap: 1rem;
+}
+/* 왼쪽: 마크다운 입력창 */
+#markdown_input {
+  flex: 1;
+  min-height: 300px;
+  resize: none;
+  margin-bottom: 0; /* 기존 margin-bottom 제거 */
+}
+
+/* 오른쪽: 미리보기 */
+#preview_area {
+  flex: 1;
+  min-height: 300px;
+  margin-bottom: 0;
+}
+
+/* 스크롤바 */
+.editor_area::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.editor_area::-webkit-scrollbar-thumb {
+  background-color: #2c3e502d;
+  border-radius: 4px;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .editor_area {
+    flex-direction: column;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  #markdown_input,
+  #preview_area {
+    margin-bottom: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+  }
 }

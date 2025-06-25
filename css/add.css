@@ -1,0 +1,35 @@
+.container {
+  position: relative;
+  padding-top: 100px;
+  min-height: calc(100vh - 232px);
+  background-color: var(--c-alice);
+  @media (max-width:600px) {
+    min-height: calc(100vh - 290.2px);
+  }
+}
+
+.container .notice_txt {
+  position: absolute;
+  width: 80%;
+  left: 50%;
+  top: 50%;
+  translate:-50% -50%;
+  font-size: 20px;
+  text-align: center;
+}
+
+.log_section {
+  padding: 28px 0 60px;
+  box-sizing: border-box;
+  height: calc(100vh - 232px);
+}
+
+.log_section .sub_tit {
+  display: block;
+  margin-bottom: 40px;
+}
+
+.log_section .log_list {
+  max-width: 1200px;
+  margin:0 auto;
+}

@@ -1,4 +1,3 @@
-
 import { route } from './router/router.js';
 
 export * from '../js/header.js'

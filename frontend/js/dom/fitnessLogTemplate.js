@@ -1,3 +1,4 @@
+
 export function insertFitnessLogTemplate() {
   const template = document.createElement('template');
   template.id = 'fitnessLogTemplate';

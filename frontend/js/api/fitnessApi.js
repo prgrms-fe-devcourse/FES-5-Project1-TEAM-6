@@ -20,7 +20,8 @@ export async function createDocument(document) {
 
 // 문서 삭제
 export async function deleteDocument(id) {
-  await fetch(`${BASE_URL}/${id}`, {
+  const res = await fetch(`${BASE_URL}/${id}`, {  // 백틱으로 수정
     method: 'DELETE',
   });
+  if (!res.ok) throw new Error('문서 삭제 실패');
 }

@@ -58,7 +58,7 @@ function handleSaveBtn(e, memoId) {
       .then((res) => res.json())
       .then((resData) => {
         alert(memoId ? "수정 완료!" : "저장 완료!");
-        localStorage.removeItem("tempMemo");
+        localStorage.removeItem(memoId? `draft-${memoId}` : "draft-new");
 
         const newId = memoId || resData.id;
 
@@ -165,7 +165,9 @@ function createEditorInPopup(container, memoId) {
   textarea.addEventListener("input", () => {
     const val = textarea.value;
     preview.innerHTML = window.marked.parse(val);
-    localStorage.setItem("tempMemo", val);
+
+    const dataKey = memoId ? `draft-${memoId}` : "draft-new";
+    localStorage.setItem(dataKey, val);
   });
 
   // 버튼별 이벤트리스너 추가
@@ -184,7 +186,7 @@ function newDiaryEditor() {
   history.replaceState({}, "", "?new=true");
 
   // localStorage 에 저장된 값 있으면 불러오기
-  const savedContent = localStorage.getItem("tempMemo") || "";
+  const savedContent = localStorage.getItem("draft-new") || "";
 
   state = {
     title: "운동 기록",
@@ -244,6 +246,7 @@ function renderDiaryPopup(memoId) {
   // 새 글 작성
   if (memoId === "new") {
     newDiaryEditor();
+    return;
   }
   
   // 서버에서 데이터 불러오기
@@ -253,6 +256,13 @@ function renderDiaryPopup(memoId) {
       return res.json();
     })
     .then((data) => {
+
+      // localStorage에 저장된 값 있는지 확인
+      const localData = localStorage.getItem(`draft-${memoId}`);
+      if (localData) {
+        data.content = localData; // 저장된 값이 있으면 덮어쓰기
+      }
+
       // 데이터 불러오기 성공하면 화면에 popup container 렌더링
       state = { ...data, isEditing: false };
 

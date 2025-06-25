@@ -175,6 +175,7 @@ function createEditorInPopup(container, memoId) {
     editorArea.appendChild(textarea);
   } else {
     textarea.style.display = "none";
+    preview.classList.add("edit_done");
     saveBtn.style.display = "none";
   }
 
@@ -261,6 +262,7 @@ function editTitle(container, memoId) {
 const closePopup = () => {
   const popupContainer = document.querySelector(".popup_diary_card_container");
   popupContainer?.remove();
+  document.querySelector('.popup_backdrop')?.remove();
   // 스크롤 및 pathname 복구 
   document.body.style.overflow = "";
   history.replaceState({}, "", location.pathname);

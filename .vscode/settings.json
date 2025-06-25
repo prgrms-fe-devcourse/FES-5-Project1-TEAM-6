@@ -3,7 +3,7 @@
         "comments": "",
         "textMateRules": []
     },
-  "liveServer.settings.ignoreFiles": [
-    "**/db.json"
-  ]
+    "liveServer.settings.ignoreFiles": [
+        "**/db.json"
+    ]
 }

@@ -1,4 +1,6 @@
 
+@import url('./add.css');
+
 .page_wrap {
   width: 100%;
   margin: 0 auto;
@@ -107,7 +109,6 @@
   color: var(--c-white);
   position: relative;
   height: auto;
-  padding-top: 100px;
 }
 
 .hero_inner {
@@ -609,7 +610,7 @@
  background-color: #EFF3FD;
 
  @media (max-width: 600px) {
-  padding: 12px 0 0 0;
+  padding: 12px 0 50px 0;
  }
 }
 
@@ -779,8 +780,7 @@
 .more_btn_wrap {
   display: flex;
   justify-content: center;
-  margin-top: 49px;
-  margin-bottom: 51px;
+  margin-top: 50px;
 }
 .more_btn{
   width: 191px;
@@ -802,8 +802,10 @@
 
 /* 팝업 */
 .popup_card_container {
-	width: 1200px;
-	height: 800px;
+  width: 95vw;
+  max-width: 1200px;
+	height: 90vh;
+  max-height: 700px;
 	border-radius: 50px;
 	border: 0.5px solid var(--c-dark);
 	background-color: var(--c-alice);
@@ -859,8 +861,9 @@
 }
 
 .popup_exercise_video {
-	width: 560px;
-	height: 500px;
+	width: 360px;
+	height: calc(100vh - 300px);
+  max-height: 380px;
 	background-color: #000;
 	border-radius: 16px;
 	overflow: hidden;
@@ -874,8 +877,8 @@
 
 .popup_exercise_detail {
 	width: 500px;
-	/* height: auto; */
-	height: 500px;
+	height: calc(100vh - 300px);
+  max-height: 380px;
 	display: flex;
 	flex-direction: column;
 	gap: 24px;
@@ -924,7 +927,7 @@
 	height: 50px;
 	width: 50px;
 	position: absolute;
-	top: 50px;
+	top: 30px;
 	right: 50px;
 	background: none;
 	border: none;
@@ -979,6 +982,7 @@
 		width: 100%;
 		height: auto;
     max-width: 600px;
+    max-height: none;
     padding-right: 0;
 	}
 }

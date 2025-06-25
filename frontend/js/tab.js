@@ -91,4 +91,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btn) btn.addEventListener('click', handleMoreClick);
   });
 });
+
+
+export function initTabs() {
+  tabMenuList = [...document.querySelectorAll('.tab_menu > li')];
+  tabContList = [...document.querySelectorAll('.tab_cont_wrap > div')];
+
+  renderAllTabContents();
+
+  tabMenuList.forEach(tab => tab.addEventListener('click', handleTabMenu));
+  tabContList.forEach(cont => {
+    const btn = cont.querySelector('.more_btn');
+    if (btn) btn.addEventListener('click', handleMoreClick);
+  });
+}
  

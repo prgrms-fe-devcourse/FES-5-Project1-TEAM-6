@@ -1,4 +1,4 @@
-import { handlePopupClose, setIgnoreNextClickOnce } from "./popup.js" 
+import { handlePopupClose } from "./popup.js" 
 
 const urlParams = new URLSearchParams(location.search);
 const memoId = urlParams.get("id");
@@ -14,6 +14,7 @@ let state = {
 
 /*-- 팝업 열기 --*/
 function renderDiaryPopup(documentIndex) {
+  //서버에서 일기 데이터 불러오기
   fetch("http://localhost:3000/memos")
     .then((res) => res.json())
     .then((memos) => {
@@ -25,6 +26,7 @@ function renderDiaryPopup(documentIndex) {
     })
     .then((res) => res.json())
     .then((data) => {
+      // 데이터 불러오기 성공하면 화면에 popup container 렌더링
       state = { ...data, isEditing: false };
       const popupContainer = document.createElement("div");
       popupContainer.className = "popup_diary_card_container";
@@ -124,8 +126,8 @@ function renderEditorInPopup(container, memoId) {
       .then((res) => res.json())
       .then((resData) => {
         alert("수정 완료!");
-  
-        setIgnoreNextClickOnce();
+        console.log('page reload?')
+        // setIgnoreNextClickOnce();
         localStorage.removeItem("tempMemo");
         state = { ...resData, isEditing: false };
         textarea.style.display = "none";

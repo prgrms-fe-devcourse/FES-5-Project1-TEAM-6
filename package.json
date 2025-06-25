@@ -4,9 +4,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "live-server --host=localhost --port=5500 --no-browser",
     "serve": "node server/index.js",
-    "postinstall": "chmod -R 755 node_modules/.bin"
+    "postinstall": "chmod -R 755 node_modules/.bin",
+    "serve:frontend": "live-server --host=localhost --port=5500 --no-browser --entry-file=index.html --ignore=db",
+    "serve:backend": "json-server --watch ./db/db.json --port 3000",
+    "start": "run-p serve:*"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,7 @@
     "@eslint/js": "^9.29.0",
     "eslint": "^9.29.0",
     "globals": "^16.2.0",
-    "live-server": "^1.2.2"
+    "live-server": "^1.2.2",
+    "npm-run-all": "^4.1.5"
   }
 }

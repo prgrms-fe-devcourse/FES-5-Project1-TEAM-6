@@ -1,5 +1,10 @@
 import { exercises } from "./data.js";
 
+let ignoreNextClick = false;
+
+export function setIgnoreNextClickOnce() {
+    ignoreNextClick = true;
+}
 
 /* data의 요소를 li로 변환 */
 function toListItems(arr, className) {
@@ -11,7 +16,7 @@ function toListItems(arr, className) {
 }
 
 
-function handlePopupClose() {
+export function handlePopupClose() {
     // 팝업 및 이벤트리스너 제거 
     const closePopup = () => {
         document.body.removeEventListener('click', clickHandler);
@@ -31,13 +36,25 @@ function handlePopupClose() {
 
     /* 팝업 창 바깥 클릭 또는 X 버튼 클릭 시 동작 */
    const clickHandler = (e) => {
-        const closeBtn = e.target.closest(".popup_close-button");
-        const popupContainer = document.querySelector(".popup_card_container");
+        if (ignoreNextClick) {
+            ignoreNextClick = false; // 다음 클릭 1회만 무시
+            return;
+        }
+        const closeBtn = e.target.closest(".popup_close-button") ||
+            e.target.closest(".popup_diary_close_button");
 
-        if (!popupContainer || !popupContainer.contains(e.target) || closeBtn) {
+        const popupContainer =
+            document.querySelector(".popup_card_container") ||
+            document.querySelector(".popup_diary_card_container");
+
+        const clickedInsidePopup = e.target.closest(".popup_diary_card_container");
+    
+        if (!popupContainer || (!clickedInsidePopup && !closeBtn)) return;
+        if (closeBtn || !clickedInsidePopup) {
             popupContainer.remove();
             closePopup();
-    }}
+        }
+        }
 
     /* 이벤트리스너 등록 */
     document.addEventListener('keydown', escHandler);

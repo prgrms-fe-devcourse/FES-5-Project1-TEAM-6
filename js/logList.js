@@ -34,16 +34,10 @@ export function initFitness() {
     `;
   }
 
-  function handleClickLogAddBtn() {
-    logList.insertAdjacentHTML('beforeend', createlogItem('데이터 받아야함'));
+  function handleClickLogAddBtn(tit) {
+    logList.insertAdjacentHTML('beforeend', createlogItem(tit));
   }
 
-  function handleAddItem(e){
-    if(e.target.classList.contains('add_btn')){
-      const li = e.target.closest('li');
-      handleClickLogAddBtnInDepth(li);
-    }
-  }
 
   function handleClickLogAddBtnInDepth(li) {
     const ulInDepth = document.createElement('ul');
@@ -54,6 +48,13 @@ export function initFitness() {
     ulInDepth.insertAdjacentHTML('beforeend', createlogItemInDepth('하위 뎁스 연결 받아야함'));
   }
 
+    function handleAddItem(e){
+    if(e.target.classList.contains('add_btn')){
+      const li = e.target.closest('li');
+      handleClickLogAddBtnInDepth(li);
+    }
+  }
+
   function handleDeleteItem(e){
     if(e.target.classList.contains('delete_btn')){
       const li = e.target.closest('li');
@@ -62,7 +63,7 @@ export function initFitness() {
   }
   
 
-  logList.addEventListener('click', handleDeleteItem);
   logList.addEventListener('click', handleAddItem);
+  logList.addEventListener('click', handleDeleteItem);
   logAddBtn.addEventListener('click', handleClickLogAddBtn);
 }

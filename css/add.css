@@ -52,6 +52,11 @@
   font-weight: 700;
 }
 
+.log_section .log_list {
+  max-height: 340px;
+  overflow-y: auto;
+}
+
 .log_list li {
   margin-top: 12px;
 

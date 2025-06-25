@@ -1,3 +1,5 @@
+import { handlePopupEvents } from "../../js/editor.js"
+
 export function insertFitnessLogTemplate() {
   const template = document.createElement('template');
   template.id = 'fitnessLogTemplate';
@@ -18,3 +20,7 @@ export function insertFitnessLogTemplate() {
 
   document.body.appendChild(template);
 }
+
+// 이벤트 등록
+const cardContainer = document.querySelector('.log_list');
+cardContainer.addEventListener('click', handlePopupEvents);

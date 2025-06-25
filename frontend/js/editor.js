@@ -1,7 +1,6 @@
 const urlParams = new URLSearchParams(location.search);
 const memoId = urlParams.get("id");
-const cardContainer = document.querySelector('.card-container');
-// const cardContainer = document.querySelector('.log_list');
+// const cardContainer = document.querySelector('.card-container');
 const urlId = new URLSearchParams(location.search).get("id");
 if (urlId) {
   renderDiaryPopup(urlId);
@@ -279,15 +278,14 @@ function renderDiaryPopup(memoId) {
 }
 
 /*-- 작성된 글 리스트 클릭 이벤트 핸들러 --*/
-function handlePopupEvents(e) {
-  const targetBtn = e.target.closest('.card-open');
-  // const targetBtn = e.target.closest('.log_doc_item');
+export function handlePopupEvents(e) {
+  // const targetBtn = e.target.closest('.card-open');
+  const targetBtn = e.target.closest('.log_doc_item');
   if (!targetBtn) return;
 
   const documentId = targetBtn.dataset.value;
   renderDiaryPopup(documentId);
 }
 
-// 이벤트 등록
-cardContainer.addEventListener('click', handlePopupEvents);
+
 

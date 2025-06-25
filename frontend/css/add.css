@@ -89,7 +89,12 @@
     left: 0;
     top: 50%;
     translate: 0 -50%;
+    transition: transform 0.3s ease;
     background: url(../assets/icons/arrow_right.png) no-repeat center / contain;
+
+    &:disabled {
+      opacity: 0.2;
+    }
   }
 
   &.add_btn {

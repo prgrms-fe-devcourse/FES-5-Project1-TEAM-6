@@ -283,8 +283,9 @@ export function handlePopupEvents(e) {
   const targetBtn = e.target.closest('.log_doc_item');
   if (!targetBtn) return;
 
-  const documentId = targetBtn.dataset.value;
+  const documentId = targetBtn.dataset.id;
   renderDiaryPopup(documentId);
+  // console.log(documentId);
 }
 
 

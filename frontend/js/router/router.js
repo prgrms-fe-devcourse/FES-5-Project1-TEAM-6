@@ -15,4 +15,3 @@ export function route() {
     $container.innerHTML = '<h1>404</h1>';
   }
 }
-

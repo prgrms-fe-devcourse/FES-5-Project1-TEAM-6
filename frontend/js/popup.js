@@ -1,6 +1,5 @@
 import { exercises } from "./data.js";
 
-
 /* data의 요소를 li로 변환 */
 function toListItems(arr, className) {
     const style = (arr.length === 1) ? 
@@ -9,7 +8,6 @@ function toListItems(arr, className) {
     const liList = arr.map(text => `<li>${text}</li>`).join('');
     return `<ol class="${className}" style="${style}">${liList}</ol>`
 }
-
 
 function handlePopupClose() {
     // 팝업 및 이벤트리스너 제거 
@@ -43,7 +41,6 @@ function handlePopupClose() {
     document.addEventListener('keydown', escHandler);
     document.body.addEventListener('click', clickHandler);
 }
-
 
 /* 클릭한 data[index] 에 대한 Popup HTML 생성 */
 function createExercisePopup(dataIdx) {

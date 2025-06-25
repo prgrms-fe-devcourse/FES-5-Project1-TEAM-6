@@ -1,33 +1,3 @@
-const track = document.querySelector('.slider_track');
-const slides = document.querySelectorAll('.slider_track img');
-const slideWidth = 283;
-let index = 0;
-
-
-// 반응형추가
-function getSlideWidth() {
-  return slides[0].clientWidth; // 현재 보여지는 슬라이드 너비
-}
-
-function moveSlide() {
-  index++;
-  const slideWidth = getSlideWidth();
-  track.style.transition = 'transform 0.5s ease-in-out';
-  track.style.transform = `translateX(-${slideWidth * index}px)`;
-
-  if (index >= slides.length - 3) {
-    setTimeout(() => {
-      track.style.transition = 'none';
-      index = 0;
-      track.style.transform = `translateX(0px)`;
-    }, 500);
-  }
-}
-
-
-setInterval(moveSlide, 3000);
-
-
 const header = document.querySelector('.main_header');
 let lastScroll = 0;
 

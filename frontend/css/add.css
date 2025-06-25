@@ -1,0 +1,121 @@
+.container {
+  position: relative;
+  padding-top: 100px;
+  min-height: calc(100vh - 232px);
+  background-color: var(--c-alice);
+  @media (max-width:600px) {
+    min-height: calc(100vh - 290.2px);
+  }
+}
+
+.container .notice_txt {
+  position: absolute;
+  width: 80%;
+  left: 50%;
+  top: 50%;
+  translate:-50% -50%;
+  font-size: 20px;
+  text-align: center;
+}
+
+.log_section {
+  padding: 28px 0 60px;
+  box-sizing: border-box;
+}
+
+.log_section .sub_tit {
+  display: block;
+  margin-bottom: 40px;
+}
+
+.log_section .log_bar {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  border-radius: 40px;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+.log_section .log_addbtn {
+  display: flex;
+  align-items: center;
+  width: 222px;
+  height: 50px;
+  margin: 0 auto 20px;
+  padding: 12px 18px;
+  background-color: var(--c-blue);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.log_section .log_list {
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.log_list li {
+  margin-top: 12px;
+
+  & > .log_doc_item:hover {
+    cursor: pointer;
+    background-color: var(--c-alice);
+    .add_btn,
+    .delete_btn {
+      opacity: 1;
+    }
+  }
+}
+
+.log_list .log_doc_item {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding:10px 12px 10px 0;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.log_doc_item button {
+  display: block;
+  width: 24px;
+  height: 24px;
+
+  &.arrow {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    translate: 0 -50%;
+    background: url(../assets/icons/arrow_right.png) no-repeat center / contain;
+  }
+
+  &.add_btn {
+    opacity: 0;
+    background: url(../assets/icons/plus.png) no-repeat center / contain;
+  }
+  &.delete_btn {
+    opacity: 0;
+    background: url(../assets/icons/delete.png) no-repeat center / contain;
+  }
+}
+.log_list .log_doc_item .tit {
+  width: calc(100% - 100px);
+  padding-left: 36px;
+  box-sizing: border-box;
+  line-height: 24px;
+}
+
+.log_list .log_doc_item .btn_wrap {
+  display: flex;
+  gap: 10px;
+}
+.log_list .in_depth > li {
+  padding-left: 36px;
+}
+
+.log_list .arrow.rotate {
+  transform: rotate(90deg);
+}

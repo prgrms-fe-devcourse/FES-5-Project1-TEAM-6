@@ -1,6 +1,6 @@
 const urlParams = new URLSearchParams(location.search);
 const memoId = urlParams.get("id");
-const cardContainer = document.querySelector('.card-container');
+const cardContainer = document.querySelector(".card-container");
 // const cardContainer = document.querySelector('.log_list');
 const urlId = new URLSearchParams(location.search).get("id");
 if (urlId) {
@@ -9,12 +9,11 @@ if (urlId) {
 
 //state 초기화(기본값)
 let state = {
-    title: "운동 기록",
-    content: "",
-    date: new Date().toISOString(),
-    isEditing: !memoId, // 새로운글이면 true,기존글이면 false
-  };
-
+  title: "운동 기록",
+  content: "",
+  date: new Date().toISOString(),
+  isEditing: !memoId, // 새로운글이면 true,기존글이면 false
+};
 
 /*-- 작성일 포맷팅 --*/
 function formatKoreanDate(dateString) {
@@ -30,62 +29,62 @@ function formatKoreanDate(dateString) {
 /*---------- fetch 통신 ----------*/
 /*-- save Event: PUT / POST 분기 --*/
 function handleSaveBtn(e, memoId) {
-    e.preventDefault();
-    const textarea = document.querySelector("textarea");
-    const title = document.querySelector("h1");
-    const popupContainer = document.querySelector(".popup_diary_card_container");
-    
-    const content = textarea.value.trim();
-    const titleText = title.textContent.trim();
-    if (!content) return alert("내용을 입력해주세요!");
+  e.preventDefault();
+  const textarea = document.querySelector("textarea");
+  const title = document.querySelector("h1");
+  const popupContainer = document.querySelector(".popup_diary_card_container");
 
-    const data = {
-      title: titleText || "제목 없음",
-      content,
-      date: new Date().toISOString(),
-    };
+  const content = textarea.value.trim();
+  const titleText = title.textContent.trim();
+  if (!content) return alert("내용을 입력해주세요!");
 
-    const url = memoId
-      ? `http://localhost:3000/fitnessLogs/${memoId}`
-      : `http://localhost:3000/fitnessLogs`;
-    const method = memoId ? "PUT" : "POST";
+  const data = {
+    title: titleText || "제목 없음",
+    content,
+    date: new Date().toISOString(),
+  };
 
-    fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
-      .then((res) => res.json())
-      .then((resData) => {
-        alert(memoId ? "수정 완료!" : "저장 완료!");
-        localStorage.removeItem(memoId? `draft-${memoId}` : "draft-new");
+  const url = memoId
+    ? `http://localhost:3000/fitnessLogs/${memoId}`
+    : `http://localhost:3000/fitnessLogs`;
+  const method = memoId ? "PUT" : "POST";
 
-        const newId = memoId || resData.id;
+  fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .then((resData) => {
+      alert(memoId ? "수정 완료!" : "저장 완료!");
+      localStorage.removeItem(memoId ? `draft-${memoId}` : "draft-new");
 
-        state = { ...resData, isEditing: false };
+      const newId = memoId || resData.id;
 
-        // 새 글이면 URL 갱신
-        if (!memoId) {
-          history.pushState({}, "", `?id=${newId}`);
-        }
-        createEditorInPopup(popupContainer, memoId);
-      });
-  }
+      state = { ...resData, isEditing: false };
+
+      // 새 글이면 URL 갱신
+      if (!memoId) {
+        history.pushState({}, "", `?id=${newId}`);
+      }
+      createEditorInPopup(popupContainer, memoId);
+    });
+}
 
 /*-- delete Event: DELETE 통신 --*/
 function handleDeleteBtn() {
-    const textarea = document.querySelector("textarea");
-    if (!textarea.value.trim()) return alert("삭제할 내용이 없습니다!");
-    if (!confirm("정말 삭제하시겠습니까?")) return;
+  const textarea = document.querySelector("textarea");
+  if (!textarea.value.trim()) return alert("삭제할 내용이 없습니다!");
+  if (!confirm("정말 삭제하시겠습니까?")) return;
 
-    fetch(`http://localhost:3000/fitnessLogs/${memoId}`, {
-      method: "DELETE",
-    }).then((res) => {
-      if (!res.ok) throw new Error("삭제 실패");
-      alert("삭제 완료!");
-      document.querySelector(".popup_diary_card_container")?.remove();
-      document.body.style.overflow = "";
-    });
+  fetch(`http://localhost:3000/fitnessLogs/${memoId}`, {
+    method: "DELETE",
+  }).then((res) => {
+    if (!res.ok) throw new Error("삭제 실패");
+    alert("삭제 완료!");
+    document.querySelector(".popup_diary_card_container")?.remove();
+    document.body.style.overflow = "";
+  });
 }
 
 /*-- popup container 생성 */
@@ -112,17 +111,17 @@ function createEditorInPopup(container, memoId) {
   saveBtn.id = "save_btn";
   saveBtn.type = "button";
   saveBtn.title = "저장";
-  saveBtn.innerHTML = `<i class="fa-solid fa-pen"></i>`;
+  saveBtn.textContent = "저장";
 
   const deleteBtn = document.createElement("button");
   deleteBtn.id = "delete_btn";
   deleteBtn.title = "삭제";
-  deleteBtn.innerHTML = `<i class="fa-solid fa-trash"></i>`;
+  deleteBtn.textContent = "삭제";
 
   const editBtn = document.createElement("button");
   editBtn.id = "edit_btn";
   editBtn.title = "수정";
-  editBtn.innerHTML = `<i class="fa-solid fa-edit"></i>`;
+  editBtn.textContent = "수정";
   if (state.isEditing) editBtn.style.display = "none";
 
   const buttonGroup = document.createElement("div");
@@ -131,7 +130,7 @@ function createEditorInPopup(container, memoId) {
 
   const titleArea = document.createElement("div");
   titleArea.className = "title_area";
-  titleArea.append(title, buttonGroup);
+  titleArea.append(title);
 
   const meta = document.createElement("div");
   meta.className = "note_meta";
@@ -159,6 +158,7 @@ function createEditorInPopup(container, memoId) {
   }
   editorArea.appendChild(preview);
   wrapper.appendChild(editorArea);
+  wrapper.appendChild(buttonGroup);
   container.appendChild(wrapper);
 
   // 작성 중인 글 localStorage에 저장
@@ -178,7 +178,6 @@ function createEditorInPopup(container, memoId) {
   });
   saveBtn.addEventListener("click", (e) => handleSaveBtn(e, memoId));
   deleteBtn.addEventListener("click", handleDeleteBtn);
-
 }
 
 /*-- 새 글 작성 --*/
@@ -206,36 +205,37 @@ function newDiaryEditor() {
 
 /*-- 팝업 닫기 --*/
 function handleDiaryPopupClose() {
-    const popupContainer = document.querySelector(".popup_diary_card_container");
-    // 팝업 및 이벤트리스너 제거 
-    const closePopup = () => {
-        document.removeEventListener('keydown', escHandler);
-        popupContainer?.remove();
-        // 스크롤 복구 
-        document.body.style.overflow = "";
+  const popupContainer = document.querySelector(".popup_diary_card_container");
+  // 팝업 및 이벤트리스너 제거
+  const closePopup = () => {
+    document.removeEventListener("keydown", escHandler);
+    popupContainer?.remove();
+    // 스크롤 복구
+    document.body.style.overflow = "";
+  };
+
+  /* ESC 누를 시 동작 */
+  const escHandler = (e) => {
+    if (e.key === "Escape") {
+      closePopup();
+      history.replaceState({}, "", location.pathname);
     }
+  };
 
-    /* ESC 누를 시 동작 */
-    const escHandler = (e) => {
-        if(e.key === 'Escape') {
-            closePopup();
-            history.replaceState({}, "", location.pathname);
-        }
-    };
+  /* X 버튼 클릭 시 동작 */
+  const clickHandler = (e) => {
+    const closeBtn =
+      e.target.closest(".popup_close-button") ||
+      e.target.closest(".popup_diary_close_button");
 
-    /* X 버튼 클릭 시 동작 */
-    const clickHandler = (e) => {
-        const closeBtn = e.target.closest(".popup_close-button") ||
-        e.target.closest(".popup_diary_close_button");
-    
-        if (closeBtn) {
-            closePopup();
-            history.replaceState({}, "", location.pathname);
-        }
+    if (closeBtn) {
+      closePopup();
+      history.replaceState({}, "", location.pathname);
     }
+  };
 
-    /* 이벤트리스너 등록 */
-    document.addEventListener('keydown', escHandler);
+  /* 이벤트리스너 등록 */
+  document.addEventListener("keydown", escHandler);
 }
 
 /*-- 팝업 열기 --*/
@@ -248,15 +248,14 @@ function renderDiaryPopup(memoId) {
     newDiaryEditor();
     return;
   }
-  
+
   // 서버에서 데이터 불러오기
   fetch(`http://localhost:3000/fitnessLogs/${memoId}`)
-    .then(res => {
+    .then((res) => {
       if (!res.ok) throw new Error("해당 기록을 찾을 수 없습니다.");
       return res.json();
     })
     .then((data) => {
-
       // localStorage에 저장된 값 있는지 확인
       const localData = localStorage.getItem(`draft-${memoId}`);
       if (localData) {
@@ -283,7 +282,7 @@ function renderDiaryPopup(memoId) {
 
 /*-- 작성된 글 리스트 클릭 이벤트 핸들러 --*/
 function handlePopupEvents(e) {
-  const targetBtn = e.target.closest('.card-open');
+  const targetBtn = e.target.closest(".card-open");
   // const targetBtn = e.target.closest('.log_doc_item');
   if (!targetBtn) return;
 
@@ -292,5 +291,4 @@ function handlePopupEvents(e) {
 }
 
 // 이벤트 등록
-cardContainer.addEventListener('click', handlePopupEvents);
-
+cardContainer.addEventListener("click", handlePopupEvents);

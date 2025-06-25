@@ -1,3 +1,5 @@
+import { renderFitnessLog } from "./pages/fitnessLog.js"
+
 const urlParams = new URLSearchParams(location.search);
 const memoId = urlParams.get("id");
 // const cardContainer = document.querySelector('.card-container');
@@ -116,17 +118,20 @@ function createEditorInPopup(container, memoId) {
   saveBtn.id = "save_btn";
   saveBtn.type = "button";
   saveBtn.title = "저장";
-  saveBtn.innerHTML = `<i class="fa-solid fa-pen"></i>`;
+  // saveBtn.innerHTML = `<i class="fa-solid fa-pen"></i>`;
+  saveBtn.textContent = "저장";
 
   const deleteBtn = document.createElement("button");
   deleteBtn.id = "delete_btn";
   deleteBtn.title = "삭제";
-  deleteBtn.innerHTML = `<i class="fa-solid fa-trash"></i>`;
+  // deleteBtn.innerHTML = `<i class="fa-solid fa-trash"></i>`;
+  deleteBtn.textContent = "삭제";
 
   const editBtn = document.createElement("button");
   editBtn.id = "edit_btn";
   editBtn.title = "수정";
-  editBtn.innerHTML = `<i class="fa-solid fa-edit"></i>`;
+  // editBtn.innerHTML = `<i class="fa-solid fa-edit"></i>`;
+  editBtn.textContent = "수정";
   if (state.isEditing) editBtn.style.display = "none";
 
   const buttonGroup = document.createElement("div");
@@ -135,7 +140,8 @@ function createEditorInPopup(container, memoId) {
 
   const titleArea = document.createElement("div");
   titleArea.className = "title_area";
-  titleArea.append(title, buttonGroup);
+  // titleArea.append(title, buttonGroup);
+  titleArea.append(title);
 
   const meta = document.createElement("div");
   meta.className = "note_meta";
@@ -167,6 +173,7 @@ function createEditorInPopup(container, memoId) {
 
   wrapper.append(titleArea, meta);
   wrapper.appendChild(editorArea);
+  wrapper.appendChild(buttonGroup);
   wrapper.prepend(closeBtn);
   editorArea.appendChild(preview);
   container.appendChild(wrapper);
@@ -223,6 +230,10 @@ const closePopup = () => {
   // 스크롤 및 pathname 복구 
   document.body.style.overflow = "";
   history.replaceState({}, "", location.pathname);
+
+  // 목록 리렌더링
+  const contentsList = document.querySelector(".log_section");
+  renderFitnessLog(contentsList);
 }
   // ESC 누를 시 동작
 function handleDiaryPopupClose() {
@@ -238,12 +249,6 @@ function handleDiaryPopupClose() {
 function renderDiaryPopup(memoId) {
   // 이미 팝업이 있으면 렌더링 안함
   if (document.querySelector(".popup_diary_card_container")) return;
-
-  // 새 글 작성
-  if (memoId === "new") {
-    newDiaryEditor();
-    return;
-  }
   
   // 서버에서 데이터 불러오기
   fetch(`http://localhost:3000/fitnessLogs/${memoId}`)
@@ -252,7 +257,12 @@ function renderDiaryPopup(memoId) {
       return res.json();
     })
     .then((data) => {
-
+      if (!data.content || data.content.trim() === "") {
+        // 새 글 작성 상태로 진입
+        newDiaryEditor(data.id);
+        return;
+      }
+      
       // localStorage에 저장된 값 있는지 확인
       const localData = localStorage.getItem(`draft-${memoId}`);
       if (localData) {

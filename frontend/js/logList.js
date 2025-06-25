@@ -5,6 +5,7 @@ export async function initFitness() {
   const logAddBtn = document.querySelector('#logAddBtn');
 
   function createLogItem(id, tit) {
+    const title = tit?.trim() || '제목 없음';
     return `
       <li>
         <div class="log_doc_item" role="button" tabindex="0" data-id="${id}">
@@ -20,6 +21,7 @@ export async function initFitness() {
   }
 
   function createLogItemInDepth(id, tit) {
+    const title = tit?.trim() || '제목 없음';
     return `
       <li>
         <div class="log_doc_item" role="button" tabindex="0" data-id="${id}">
@@ -55,15 +57,23 @@ export async function initFitness() {
     });
   }
 
-  // 루트 문서 추가
+  // 문서 추가
   async function handleClickLogAddBtn(e) {
     e.preventDefault();
     const btn = e.target.closest('#logAddBtn');
     if (!btn) return;
 
-    const newDoc = await createDocument({ title: '새 운동 기록' });
+    const addTitle = '새 운동 기록';
+
+    const safeTitle = addTitle?.trim() || '제목 없음';
+
+
+    const newDoc = await createDocument({ 
+      title: safeTitle,
+      content: "",
+    });
+
     logList.insertAdjacentHTML('beforeend', createLogItem(newDoc.id, newDoc.title));
-    // 새로 추가된 li의 arrow는 기본적으로 disabled (createLogItem에서 이미 disabled)
   }
 
   // 하위 문서 추가
@@ -78,10 +88,19 @@ export async function initFitness() {
       li.appendChild(ulInDepth);
     }
 
-    const newChildDoc = await createDocument({ title: '새 운동 기록' });
-    ulInDepth.insertAdjacentHTML('beforeend', createLogItemInDepth(newChildDoc.id, newChildDoc.title));
+    const addTitle = '새 운동 기록';
+    const safeTitle = addTitle?.trim() || '제목 없음'; 
 
-    // 하위 문서가 생겼으니 arrow 버튼 활성화 & 회전 추가
+    const newChildDoc = await createDocument({ 
+      title: safeTitle,
+      content: "",
+    });
+
+    ulInDepth.insertAdjacentHTML(
+      'beforeend',
+      createLogItemInDepth(newChildDoc.id, newChildDoc.title)
+    );
+
     const toggleBtn = li.querySelector('.arrow');
     if (toggleBtn) {
       toggleBtn.removeAttribute('disabled');
@@ -108,13 +127,9 @@ export async function initFitness() {
 
     const li = deleteBtn.closest('li');
     const parentUl = li.parentElement;
-    const title = li.querySelector('.tit').textContent;
 
-    const documents = await fetchDocuments();
-    const matched = documents.find(doc => doc.title === title);
-    if (matched) {
-      await deleteDocument(matched.id);
-    }
+    const docId = li.querySelector('.log_doc_item').dataset.id;
+    await deleteDocument(docId);
 
     li.remove();
 

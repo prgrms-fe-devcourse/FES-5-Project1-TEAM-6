@@ -83,6 +83,7 @@
   display: block;
   width: 24px;
   height: 24px;
+  z-index: 99;
 
   &.arrow {
     position: absolute;

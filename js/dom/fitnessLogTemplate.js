@@ -11,7 +11,7 @@ export function insertFitnessLogTemplate() {
 
         <ul class="log_list">
           <li>
-            <div class="log_doc_item">
+            <div class="log_doc_item" role="button" tabindex="0">
               <button class="arrow"><span class="blind">페이지 없음</span></button>
               <p class="tit">제목이 길어질 경우를 대비제목이 길어질 경우를 대비제목이 길어질 경우를 대비제목이 길어질 경우를 대비제목이 길어질 경우를 대비제목이 길어질 경우를 대비제목이 길어질 경우를 대비제목이 길어질 경우를 대비제목이 길어질 경우를 대비제목이 길어질 경우를 대비</p>
 
@@ -22,7 +22,7 @@ export function insertFitnessLogTemplate() {
             </div>
           </li>
           <li>
-            <div class="log_doc_item">
+            <div class="log_doc_item" role="button" tabindex="0">
               <button class="arrow rotate"><span class="blind">하위 페이지 있음</span></button>
               <p class="tit">제목이 길어질 경우를 대비제목이 길어질 경우를 대비</p>
 
@@ -34,7 +34,7 @@ export function insertFitnessLogTemplate() {
 
             <ul class="in_depth">
               <li>
-                <div class="log_doc_item">
+                <div class="log_doc_item" role="button" tabindex="0">
                   <button class="arrow"><span class="blind">하위 페이지 없음</span></button>
                   <p class="tit">제목이 길어질 경우를 대비제목이 길어질 경우를 대비</p>
 

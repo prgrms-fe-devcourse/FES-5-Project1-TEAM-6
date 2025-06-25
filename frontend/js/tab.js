@@ -1,4 +1,4 @@
-import { exercises as data } from './data.js';
+import { exercises as data } from './exerciseData.js';
 import { renderCards} from './card.js';
 
 

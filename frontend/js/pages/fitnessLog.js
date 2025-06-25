@@ -18,7 +18,7 @@ export function renderFitnessLog($container) {
 
 
   // 이벤트 등록
-  const cardContainer = document.querySelector('.log_list');
-  cardContainer.addEventListener('click', handlePopupEvents);
+  const listContainer = document.querySelector('.log_list');
+  listContainer.addEventListener('click', handlePopupEvents);
 
 }

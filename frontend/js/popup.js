@@ -1,4 +1,4 @@
-import { exercises } from "./data.js";
+import { exercises } from "./exerciseData.js";
 
 /* data의 요소를 li로 변환 */
 function toListItems(arr, className) {

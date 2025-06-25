@@ -106,6 +106,8 @@ function createPopupContainer() {
 /*-- 팝업 내부 에디터 생성 --*/
 function createEditorInPopup(container, memoId) {
   container.innerHTML = "";
+  const backdrop = document.createElement("div");
+  backdrop.className = "popup_backdrop";
 
   const wrapper = document.createElement("div");
   wrapper.id = "editor_wrapper";
@@ -182,6 +184,7 @@ function createEditorInPopup(container, memoId) {
   wrapper.prepend(closeBtn);
   editorArea.appendChild(preview);
   container.appendChild(wrapper);
+  document.body.appendChild(backdrop);
 
 
   // 작성 중인 글 localStorage에 저장

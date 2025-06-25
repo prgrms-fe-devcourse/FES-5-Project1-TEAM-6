@@ -108,6 +108,11 @@ function createEditorInPopup(container, memoId) {
   title.id = "note_title";
   title.textContent = state.title;
 
+  const closeBtn = document.createElement("button");
+  closeBtn.className = "popup_diary_close_button";
+  closeBtn.title = "닫기";
+  closeBtn.innerHTML = `<img src="../assets/icons/close.png" alt="닫기" />`;
+
   const saveBtn = document.createElement("button");
   saveBtn.id = "save_btn";
   saveBtn.type = "button";
@@ -148,17 +153,23 @@ function createEditorInPopup(container, memoId) {
   preview.innerHTML = window.marked.parse(state.content);
   preview.style.display = "block";
 
-  wrapper.append(titleArea, meta);
   const editorArea = document.createElement("div");
   editorArea.className = "editor_area";
+
+  // 요소별 스타일 지정
   if (state.isEditing) {
     textarea.style.display = "block";
     editorArea.appendChild(textarea);
+    saveBtn.style.display = "inline-block";
   } else {
     textarea.style.display = "none";
+    saveBtn.style.display = "none";
   }
-  editorArea.appendChild(preview);
+
+  wrapper.append(titleArea, meta);
   wrapper.appendChild(editorArea);
+  wrapper.prepend(closeBtn);
+  editorArea.appendChild(preview);
   container.appendChild(wrapper);
 
   // 작성 중인 글 localStorage에 저장
@@ -171,6 +182,8 @@ function createEditorInPopup(container, memoId) {
   });
 
   // 버튼별 이벤트리스너 추가
+  closeBtn.addEventListener("click", closePopup);
+
   editBtn.addEventListener("click", () => {
     state.isEditing = true;
     console.log(state.isEditing);
@@ -205,36 +218,20 @@ function newDiaryEditor() {
 }
 
 /*-- 팝업 닫기 --*/
+const closePopup = () => {
+  const popupContainer = document.querySelector(".popup_diary_card_container");
+  popupContainer?.remove();
+  // 스크롤 및 pathname 복구 
+  document.body.style.overflow = "";
+  history.replaceState({}, "", location.pathname);
+}
+  // ESC 누를 시 동작
 function handleDiaryPopupClose() {
-    const popupContainer = document.querySelector(".popup_diary_card_container");
-    // 팝업 및 이벤트리스너 제거 
-    const closePopup = () => {
-        document.removeEventListener('keydown', escHandler);
-        popupContainer?.remove();
-        // 스크롤 복구 
-        document.body.style.overflow = "";
-    }
-
-    /* ESC 누를 시 동작 */
     const escHandler = (e) => {
         if(e.key === 'Escape') {
             closePopup();
-            history.replaceState({}, "", location.pathname);
         }
     };
-
-    /* X 버튼 클릭 시 동작 */
-    const clickHandler = (e) => {
-        const closeBtn = e.target.closest(".popup_close-button") ||
-        e.target.closest(".popup_diary_close_button");
-    
-        if (closeBtn) {
-            closePopup();
-            history.replaceState({}, "", location.pathname);
-        }
-    }
-
-    /* 이벤트리스너 등록 */
     document.addEventListener('keydown', escHandler);
 }
 

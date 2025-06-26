@@ -1,10 +1,31 @@
 
-@import url('./add.css');
+@import url('./logList.css');
+@import url('./editor.css');
 
 .page_wrap {
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
+}
+
+.container {
+  position: relative;
+  padding-top: 100px;
+  min-height: calc(100vh - 132px);
+  background-color: var(--c-alice);
+  @media (max-width:600px) {
+    min-height: calc(100vh - 290.2px);
+  }
+}
+
+.container .notice_txt {
+  position: absolute;
+  width: 80%;
+  left: 50%;
+  top: 50%;
+  translate:-50% -50%;
+  font-size: 20px;
+  text-align: center;
 }
 
 /* 헤더 */
@@ -75,6 +96,7 @@
 
 .nav_menu a.active {
   font-weight: 700;
+  color: var(--c-mint);
 }
 
 .login_btn {

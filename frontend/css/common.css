@@ -70,7 +70,19 @@
 			format("opentype");
 }
 
-body,
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "Segoe UI", "Noto Sans KR", sans-serif;
+	background-color: #ffffff;
+	color: #2e2e2e;
+	line-height: 1.6;
+}
+
 h1,
 h2,
 h3,
@@ -97,6 +109,7 @@ select {
 	white-space: nowrap;
 }
 
+/* 공통 컬러 */
 :root {
 	/* color */
 	--c-dark: #2c3e50;

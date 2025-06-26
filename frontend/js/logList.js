@@ -39,13 +39,37 @@ export async function initFitness() {
   // 문서 불러와서 렌더링 시 자식이 없으면 disabled 유지
   async function loadLogsFromServer() {
     const documents = await fetchDocuments();
+    const rootDocs = documents.filter(doc => !doc.parent);
+    const childDocs = documents.filter(doc => doc.parent);
+
+  // 부모 자식 구분하여 렌더링
+  const renderTree = (parentId, container) => {
+    childDocs
+      .filter(doc => doc.parent === parentId)
+      .forEach(doc => {
+        const li = document.createElement("li");
+        li.innerHTML = createLogItemInDepth(doc.id, doc.title);
+
+        const parentLi = container.querySelector(`[data-id="${parentId}"]`).closest('li');
+        let ulInDepth = parentLi.querySelector('ul.in_depth');
+        if (!ulInDepth) {
+          ulInDepth = document.createElement('ul');
+          ulInDepth.classList.add('in_depth');
+          parentLi.appendChild(ulInDepth);
+        }
+
+        ulInDepth.appendChild(li);
+        renderTree(doc.id, ulInDepth);
+      })
+  }
 
     // 최신순으로 역순 정렬
     documents.reverse();
     
-    documents.forEach(doc => {
+    rootDocs.forEach(doc => {
       logList.insertAdjacentHTML('beforeend', createLogItem(doc.id, doc.title));
     });
+    rootDocs.forEach(doc => renderTree(doc.id, logList));
 
     // arrow 버튼 처리
     logList.querySelectorAll('li').forEach(li => {
@@ -67,13 +91,12 @@ export async function initFitness() {
     if (!btn) return;
 
     const addTitle = '새 운동 기록';
-
     const safeTitle = addTitle?.trim() || '제목 없음';
-
-
+    
     const newDoc = await createDocument({ 
       title: safeTitle,
       content: "",
+      parent: null
     });
 
     logList.insertAdjacentHTML('afterbegin', createLogItem(newDoc.id, newDoc.title));
@@ -93,10 +116,12 @@ export async function initFitness() {
 
     const addTitle = '새 운동 기록';
     const safeTitle = addTitle?.trim() || '제목 없음'; 
+    const parentId = li.querySelector('.log_doc_item').dataset.id;
 
     const newChildDoc = await createDocument({ 
       title: safeTitle,
       content: "",
+      parent: parentId
     });
 
     ulInDepth.insertAdjacentHTML('afterbegin', createLogItemInDepth(newChildDoc.id, newChildDoc.title));

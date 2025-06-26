@@ -1,7 +1,6 @@
 import { route } from './router/router.js';
 
 export * from '../js/header.js'
-export * from '../js/menu.js'
 
 
 route();

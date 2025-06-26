@@ -48,11 +48,14 @@ closeMenuBtn.addEventListener('click', () => {
 // 클릭한 메뉴에 active 추가
 document.addEventListener('DOMContentLoaded', () => {
   const menuItems = document.querySelectorAll('a.menu_item');
+  const currentPath = window.location.pathname;
 
   menuItems.forEach(item => {
-    item.addEventListener('click', () => {
-      menuItems.forEach(el => el.classList.remove('active'));
+    const href = item.getAttribute('href');
+    if (href === currentPath) {
       item.classList.add('active');
-    });
+    } else {
+      item.classList.remove('active');
+    }
   });
 });

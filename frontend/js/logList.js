@@ -10,7 +10,7 @@ export async function initFitness() {
       <li>
         <div class="log_doc_item" role="button" tabindex="0" data-id="${id}">
           <button type="button" class="arrow" disabled><span class="blind">아코디언</span></button>
-          <p class="tit">${tit}</p>
+          <p class="tit">${title}</p>
           <div class="btn_wrap">
             <button type="button" class="add_btn"><span class="blind">하위 페이지 추가</span></button>
             <button type="button" class="delete_btn"><span class="blind">해당 페이지 삭제</span></button>
@@ -26,7 +26,7 @@ export async function initFitness() {
       <li>
         <div class="log_doc_item" role="button" tabindex="0" data-id="${id}">
           <button type="button" class="arrow" disabled><span class="blind">아코디언</span></button>
-          <p class="tit">${tit}</p>
+          <p class="tit">${title}</p>
           <div class="btn_wrap">
             <button type="button" class="add_btn"><span class="blind">하위 페이지 추가</span></button>
             <button type="button" class="delete_btn"><span class="blind">해당 페이지 삭제</span></button>
@@ -36,15 +36,18 @@ export async function initFitness() {
     `;
   }
 
-  // 문서 불러와서 렌더링 시 .arrow가 없거나 자식이 없으면 disabled 유지
+  // 문서 불러와서 렌더링 시 자식이 없으면 disabled 유지
   async function loadLogsFromServer() {
     const documents = await fetchDocuments();
-    logList.innerHTML = ''; // 초기화
 
+    // 최신순으로 역순 정렬
+    documents.reverse();
+    
     documents.forEach(doc => {
       logList.insertAdjacentHTML('beforeend', createLogItem(doc.id, doc.title));
     });
 
+    // arrow 버튼 처리
     logList.querySelectorAll('li').forEach(li => {
       const arrowBtn = li.querySelector('.arrow');
       const ulInDepth = li.querySelector('ul.in_depth');
@@ -73,7 +76,7 @@ export async function initFitness() {
       content: "",
     });
 
-    logList.insertAdjacentHTML('beforeend', createLogItem(newDoc.id, newDoc.title));
+    logList.insertAdjacentHTML('afterbegin', createLogItem(newDoc.id, newDoc.title));
   }
 
   // 하위 문서 추가
@@ -96,10 +99,7 @@ export async function initFitness() {
       content: "",
     });
 
-    ulInDepth.insertAdjacentHTML(
-      'beforeend',
-      createLogItemInDepth(newChildDoc.id, newChildDoc.title)
-    );
+    ulInDepth.insertAdjacentHTML('afterbegin', createLogItemInDepth(newChildDoc.id, newChildDoc.title));
 
     const toggleBtn = li.querySelector('.arrow');
     if (toggleBtn) {
@@ -118,12 +118,13 @@ export async function initFitness() {
     handleClickLogAddBtnInDepth(li, e);
   }
 
-  // 삭제 처리 (기존 유지)
+  // 삭제 처리
   async function handleDeleteItem(e) {
     e.preventDefault();
 
     const deleteBtn = e.target.closest('.delete_btn');
     if (!deleteBtn) return;
+    if (!confirm("정말 삭제하시겠습니까?")) return;
 
     const li = deleteBtn.closest('li');
     const parentUl = li.parentElement;

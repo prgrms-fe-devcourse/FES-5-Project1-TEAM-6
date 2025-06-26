@@ -28,14 +28,14 @@ function formatKoreanDate(dateString) {
 }
 
 /*---------- fetch 통신 ----------*/
-/*-- save Event: PUT / POST 분기 --*/
+/*-- save Event: PUT --*/
 function handleSaveBtn(e, memoId) {
   e.preventDefault();
   const textarea = document.querySelector("textarea");
-  const title = document.querySelector("h1");
+  const title = document.querySelector("#note_title");
   const popupContainer = document.querySelector(".popup_diary_card_container");
 
-  const content = textarea.value.trim();
+  const content = textarea ? textarea.value.trim() : state.content;
   const titleText = title.textContent.trim();
   if (!content) return alert("내용을 입력해주세요!");
 
@@ -45,29 +45,19 @@ function handleSaveBtn(e, memoId) {
     date: new Date().toISOString(),
   };
 
-  const url = memoId
-    ? `http://localhost:3000/fitnessLogs/${memoId}`
-    : `http://localhost:3000/fitnessLogs`;
-  const method = memoId ? "PUT" : "POST";
+  const url = `http://localhost:3000/fitnessLogs/${memoId}`;
 
   fetch(url, {
-    method,
+    method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
     .then((res) => res.json())
     .then((resData) => {
-      alert(memoId ? "수정 완료!" : "저장 완료!");
-      localStorage.removeItem(memoId ? `draft-${memoId}` : "draft-new");
-
-      const newId = memoId || resData.id;
-
+      alert("저장 완료!");
+      localStorage.removeItem(`draft-${memoId}`);
       state = { ...resData, isEditing: false };
 
-      // 새 글이면 URL 갱신
-      if (!memoId) {
-        history.pushState({}, "", `?id=${newId}`);
-      }
       createEditorInPopup(popupContainer, memoId);
     });
 }
@@ -88,6 +78,21 @@ function handleDeleteBtn() {
   });
 }
 
+/*----------localStorage--------- */
+// SPA라 새로고침이 의미는 없지만 일단...
+function saveDraftToLocalStorage(memoId, title = "", textarea = "") {
+  const draftKey = `draft-${memoId}`;
+
+  const titleText = title.textContent.trim();
+  const contentText = textarea.value;
+  const draft = {
+    title: titleText,
+    content: contentText,
+  };
+  localStorage.setItem(draftKey, JSON.stringify(draft));
+}
+
+/*-----------DOM 제어-------------*/
 /*-- popup container 생성 */
 function createPopupContainer() {
   const popupContainer = document.createElement("div");
@@ -99,6 +104,8 @@ function createPopupContainer() {
 /*-- 팝업 내부 에디터 생성 --*/
 function createEditorInPopup(container, memoId) {
   container.innerHTML = "";
+  const backdrop = document.createElement("div");
+  backdrop.className = "popup_backdrop";
 
   const wrapper = document.createElement("div");
   wrapper.id = "editor_wrapper";
@@ -135,7 +142,7 @@ function createEditorInPopup(container, memoId) {
 
   const buttonGroup = document.createElement("div");
   buttonGroup.className = "button_group";
-  buttonGroup.append(saveBtn, deleteBtn, editBtn);
+  buttonGroup.append(deleteBtn, editBtn, saveBtn);
 
   const titleArea = document.createElement("div");
   titleArea.className = "title_area";
@@ -164,9 +171,9 @@ function createEditorInPopup(container, memoId) {
   if (state.isEditing) {
     textarea.style.display = "block";
     editorArea.appendChild(textarea);
-    saveBtn.style.display = "inline-block";
   } else {
     textarea.style.display = "none";
+    preview.classList.add("edit_done");
     saveBtn.style.display = "none";
   }
 
@@ -176,14 +183,19 @@ function createEditorInPopup(container, memoId) {
   wrapper.prepend(closeBtn);
   editorArea.appendChild(preview);
   container.appendChild(wrapper);
+  document.body.appendChild(backdrop);
 
   // 작성 중인 글 localStorage에 저장
   textarea.addEventListener("input", () => {
-    const val = textarea.value;
-    preview.innerHTML = window.marked.parse(val);
-
-    const dataKey = memoId ? `draft-${memoId}` : "draft-new";
-    localStorage.setItem(dataKey, val);
+    preview.innerHTML = window.marked.parse(textarea.value);
+    saveDraftToLocalStorage(memoId, title, textarea);
+  });
+  title.addEventListener("keydown", () => {
+    if (!state.isEditing) {
+      state.isEditing = true;
+      editTitle(container, memoId);
+    }
+    saveDraftToLocalStorage(memoId, title, textarea);
   });
 
   // 버튼별 이벤트리스너 추가
@@ -191,7 +203,6 @@ function createEditorInPopup(container, memoId) {
 
   editBtn.addEventListener("click", () => {
     state.isEditing = true;
-    console.log(state.isEditing);
     createEditorInPopup(container, memoId);
   });
   saveBtn.addEventListener("click", (e) => handleSaveBtn(e, memoId));
@@ -199,11 +210,11 @@ function createEditorInPopup(container, memoId) {
 }
 
 /*-- 새 글 작성 --*/
-function newDiaryEditor() {
-  history.replaceState({}, "", "?new=true");
+function newDiaryEditor(memoId) {
+  history.replaceState({}, "", `?id=${memoId}`);
 
   // localStorage 에 저장된 값 있으면 불러오기
-  const savedContent = localStorage.getItem("draft-new") || "";
+  const savedContent = localStorage.getItem(`draft-${memoId}`) || "";
 
   state = {
     title: "운동 기록",
@@ -214,10 +225,32 @@ function newDiaryEditor() {
 
   // 팝업창 렌더링
   const popupContainer = createPopupContainer();
-  createEditorInPopup(popupContainer, null); // memoId 없음
+  createEditorInPopup(popupContainer, memoId);
   requestAnimationFrame(() => {
     popupContainer.classList.add("show");
     handleDiaryPopupClose();
+  });
+}
+
+/*-- 제목 요소 수정 --*/
+function editTitle(container, memoId) {
+  // 수정 전 커서 위치 기억
+  const selection = window.getSelection();
+  const range = selection.getRangeAt(0);
+  const cursorPos = range.startOffset;
+
+  createEditorInPopup(container, memoId);
+
+  // 렌더링 후 다시 포커스 + 커서 이동
+  requestAnimationFrame(() => {
+    const newTitle = document.querySelector("#note_title");
+    const newRange = document.createRange();
+    const newSelection = window.getSelection();
+
+    newRange.setStart(newTitle.firstChild || newTitle, cursorPos);
+    newRange.collapse(true);
+    newSelection.removeAllRanges();
+    newSelection.addRange(newRange);
   });
 }
 
@@ -225,6 +258,7 @@ function newDiaryEditor() {
 const closePopup = () => {
   const popupContainer = document.querySelector(".popup_diary_card_container");
   popupContainer?.remove();
+  document.querySelector(".popup_backdrop")?.remove();
   // 스크롤 및 pathname 복구
   document.body.style.overflow = "";
   history.replaceState({}, "", location.pathname);
@@ -287,11 +321,9 @@ function renderDiaryPopup(memoId) {
 
 /*-- 작성된 글 리스트 클릭 이벤트 핸들러 --*/
 export function handlePopupEvents(e) {
-  // const targetBtn = e.target.closest('.card-open');
   const targetBtn = e.target.closest(".log_doc_item");
-  if (!targetBtn) return;
-
+  const buttons = e.target.closest("button");
+  if (!targetBtn || buttons) return;
   const documentId = targetBtn.dataset.id;
   renderDiaryPopup(documentId);
-  // console.log(documentId);
 }

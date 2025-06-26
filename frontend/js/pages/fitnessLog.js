@@ -1,6 +1,6 @@
 import { insertFitnessLogTemplate } from '../dom/fitnessLogTemplate.js';
 import { initFitness } from '../logList.js';
-import { handlePopupEvents } from "../../js/editor.js"
+import { handlePopupEvents } from "../editor.js"
 
 
 export function renderFitnessLog($container) {
@@ -18,7 +18,7 @@ export function renderFitnessLog($container) {
 
 
   // 이벤트 등록
-  const cardContainer = document.querySelector('.log_list');
-  cardContainer.addEventListener('click', handlePopupEvents);
+  const listContainer = document.querySelector('.log_list');
+  listContainer.addEventListener('click', handlePopupEvents);
 
 }

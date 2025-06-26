@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve:backend": "json-server --watch backend/db.json --port 3000",
-    "serve:frontend": "live-server frontend --port=5500 --open=/ --quiet",
+    "serve:frontend": "live-server frontend --port=5500 --open=/ --quiet --entry-file=index.html",
     "start": "concurrently \"npm run serve:backend\" \"npm run serve:frontend\"",
     "postinstall": "chmod -R 755 node_modules/.bin"
   },

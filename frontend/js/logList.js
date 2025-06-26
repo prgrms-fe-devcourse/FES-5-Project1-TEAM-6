@@ -20,19 +20,17 @@ export async function initFitness() {
     `;
   }
 
-  function createLogItemInDepth(id, tit) {
+  function createLogItemInRendering(id, tit) {
     const title = tit?.trim() || '제목 없음';
     return `
-      <li>
-        <div class="log_doc_item" role="button" tabindex="0" data-id="${id}">
-          <button type="button" class="arrow" disabled><span class="blind">아코디언</span></button>
-          <p class="tit">${title}</p>
-          <div class="btn_wrap">
-            <button type="button" class="add_btn"><span class="blind">하위 페이지 추가</span></button>
-            <button type="button" class="delete_btn"><span class="blind">해당 페이지 삭제</span></button>
-          </div>
+      <div class="log_doc_item" role="button" tabindex="0" data-id="${id}">
+        <button type="button" class="arrow" disabled><span class="blind">아코디언</span></button>
+        <p class="tit">${title}</p>
+        <div class="btn_wrap">
+          <button type="button" class="add_btn"><span class="blind">하위 페이지 추가</span></button>
+          <button type="button" class="delete_btn"><span class="blind">해당 페이지 삭제</span></button>
         </div>
-      </li>
+      </div>
     `;
   }
 
@@ -53,7 +51,7 @@ export async function initFitness() {
         .filter(doc => doc.parent === parentId)
         .forEach(doc => {
           const li = document.createElement("li");
-          li.innerHTML = createLogItemInDepth(doc.id, doc.title);
+          li.innerHTML = createLogItemInRendering(doc.id, doc.title);
 
           const parentLi = container.querySelector(`[data-id="${parentId}"]`).closest('li');
           let ulInDepth = parentLi.querySelector('ul.in_depth');
@@ -61,6 +59,9 @@ export async function initFitness() {
             ulInDepth = document.createElement('ul');
             ulInDepth.classList.add('in_depth');
             parentLi.appendChild(ulInDepth);
+
+            const arrowBtn = parentLi.querySelector('.arrow')
+            arrowBtn.classList.add('rotate');
           }
 
           ulInDepth.appendChild(li);
@@ -128,7 +129,7 @@ export async function initFitness() {
       parent: parentId
     });
 
-    ulInDepth.insertAdjacentHTML('afterbegin', createLogItemInDepth(newChildDoc.id, newChildDoc.title));
+    ulInDepth.insertAdjacentHTML('afterbegin', createLogItem(newChildDoc.id, newChildDoc.title));
 
     const toggleBtn = li.querySelector('.arrow');
     if (toggleBtn) {
@@ -137,7 +138,7 @@ export async function initFitness() {
     }
   }
 
-  /* 하위 페이지 추가 버튼 클릭 핸들러 */
+  /* 기록 추가 처리 */
   function handleAddItem(e) {
     e.preventDefault();
     const addBtn = e.target.closest('.add_btn');
@@ -156,23 +157,26 @@ export async function initFitness() {
     if (!confirm("정말 삭제하시겠습니까?")) return;
 
     const li = deleteBtn.closest('li');
-    const parentUl = li.parentElement.classList.contains('in_depth');
+    const parentUl = li.closest('ul.in_depth');
 
     const docId = li.querySelector('.log_doc_item').dataset.id;
     await deleteDocument(docId);
 
     li.remove();
+    
+    if(parentUl){
+      const liCount = parentUl.children.length;
 
-    const liCount = parentUl.querySelectorAll('li').length;
-    if (liCount === 0) {
-      const parentLi = parentUl.closest('li');
-      parentUl.remove();
-
-      if (parentLi) {
-        const arrowBtn = parentLi.querySelector('.arrow');
-        if (arrowBtn) {
-          arrowBtn.classList.remove('rotate');
-          arrowBtn.setAttribute('disabled', '');
+      if (liCount === 0) {
+        const parentLi = parentUl.closest('li');
+        parentUl.remove();
+  
+        if (parentLi) {
+          const arrowBtn = parentLi.querySelector('.arrow');
+          if (arrowBtn) {
+            arrowBtn.classList.remove('rotate');
+            arrowBtn.setAttribute('disabled', '');
+          }
         }
       }
     }

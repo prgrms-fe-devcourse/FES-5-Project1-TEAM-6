@@ -22,7 +22,7 @@
 	font-size: 1.1rem;
 	border: none;
 	border-radius: 12px;
-	background-color:#fff;
+	background-color: #fff;
 	padding: 1rem;
 	margin-bottom: 2rem;
 	resize: vertical;
@@ -103,29 +103,64 @@
 }
 
 /* 미리보기 안의 마크다운 요소 스타일 */
-#preview_area h1,
-#preview_area h2,
-#preview_area h3 {
-	margin-top: 1.5rem;
-	margin-bottom: 1rem;
+/* 제목 1 */
+#preview_area h1 {
+	font-size: 2rem;
+	font-weight: 700;
+	margin: 2rem 0 1.5rem;
+	border-bottom: 2px solid #ddd;
+	padding-bottom: 0.5rem;
+	color: #1a1a1a;
+}
+
+/* 제목 2 */
+#preview_area h2 {
+	font-size: 1.6rem;
 	font-weight: 600;
+	margin: 1.8rem 0 1rem;
+	border-bottom: 1px solid #e0e0e0;
+	padding-bottom: 0.3rem;
+	color: #2c2c2c;
+}
+
+/* 제목 3 */
+#preview_area h3 {
+	font-size: 1.3rem;
+	font-weight: 500;
+	margin: 1.5rem 0 0.8rem;
+	color: #444;
 }
 
 #preview_area p {
 	margin: 1rem 0;
 }
-
+/* 순서 없는 리스트 */
 #preview_area ul {
 	list-style: disc;
-	margin-left: 2rem;
+	margin: 1rem 0 1rem 2rem;
 }
 
-#preview_area pre {
-	background: #272822;
-	color: #f8f8f2;
-	padding: 1rem;
-	border-radius: 10px;
-	overflow-x: auto;
+/* 중첩된 순서 없는 리스트 */
+#preview_area ul ul {
+	list-style-type: circle;
+	margin-left: 1.5rem;
+}
+
+/* 순서 있는 리스트 */
+#preview_area ol {
+	list-style: decimal;
+	margin: 1rem 0 1rem 2rem;
+}
+
+/* 중첩된 순서 있는 리스트 */
+#preview_area ol ol {
+	list-style-type: lower-alpha;
+	margin-left: 1.5rem;
+}
+
+/* 리스트 항목들 공통 패딩 */
+#preview_area li {
+	margin: 0.5rem 0;
 }
 
 #preview_area blockquote {
@@ -134,6 +169,70 @@
 	padding-left: 1rem;
 	color: #555;
 	background: #f8f8f8;
+}
+
+/* 인라인 코드 */
+#preview_area p > code,
+#preview_area li > code,
+#preview_area blockquote > code {
+	background-color: #f5f5f5;
+	color: #c7254e;
+	padding: 0.2em 0.4em;
+	border-radius: 4px;
+	font-family: "Courier New", monospace;
+	font-size: 0.95em;
+}
+
+/* 블록 코드 */
+#preview_area pre > code {
+	background: transparent;
+	color: inherit;
+	font-family: "Courier New", monospace;
+	font-size: 0.95em;
+	padding: 0;
+}
+
+/* 블록 코드 래퍼 */
+#preview_area pre {
+	background: #272822;
+	color: #f8f8f2;
+	padding: 1rem;
+	border-radius: 10px;
+	overflow-x: auto;
+}
+
+#preview_area a {
+	color: #0077cc;
+	text-decoration: underline;
+}
+#preview_area a:hover {
+	text-decoration: none;
+}
+
+#preview_area hr {
+	border: none;
+	border-top: 1px solid #ccc;
+	margin: 2rem 0;
+}
+
+/* 굵은 텍스트: **text** or __text__ */
+#preview_area strong {
+	font-weight: 700;
+	color: #222;
+}
+
+/* 기울임 텍스트: *text* or _text_ */
+#preview_area em {
+	font-style: italic;
+	color: #555;
+}
+
+/* 굵고 기울인 텍스트: ***text*** or ___text___ */
+#preview_area em strong,
+#preview_area strong em {
+	font-weight: 700;
+	font-style: italic;
+	color: #111;
 }
 
 /* 제목 영역 정렬 */
@@ -202,14 +301,13 @@
 @media (max-width: 768px) {
 	#editor_wrapper {
 		max-height: none;
-
 	}
 	.editor_area {
 		flex-direction: column;
 		height: calc(95vh - 320px);
 		overflow-y: auto;
 	}
-	
+
 	#markdown_input,
 	#preview_area {
 		margin-bottom: 1rem;

@@ -1,6 +1,6 @@
 /* 에디터 전체 감싸는 박스 */
 #editor_wrapper {
-	position: absolute;
+	position: fixed;
 	left: 50%;
 	top: 50%;
 	translate: -50% -50%;

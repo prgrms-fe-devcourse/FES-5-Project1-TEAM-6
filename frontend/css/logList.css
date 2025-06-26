@@ -53,6 +53,7 @@
   & > .log_doc_item:hover {
     cursor: pointer;
     background-color: var(--c-alice);
+
     .add_btn,
     .delete_btn {
       opacity: 1;
@@ -91,10 +92,16 @@
   &.add_btn {
     opacity: 0;
     background: url(../assets/icons/plus.png) no-repeat center / contain;
+    @media (max-width: 768px){
+      opacity: 1;
+    }
   }
   &.delete_btn {
     opacity: 0;
     background: url(../assets/icons/delete.png) no-repeat center / contain;
+    @media (max-width: 768px){
+      opacity: 1;
+    }
   }
 }
 .log_list .log_doc_item .tit {

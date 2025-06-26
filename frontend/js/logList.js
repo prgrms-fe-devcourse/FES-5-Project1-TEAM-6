@@ -39,8 +39,13 @@ export async function initFitness() {
   /* 문서 불러와서 렌더링 */
   async function loadLogsFromServer() {
     const documents = await fetchDocuments();
+
+    documents.reverse();
+
     const rootDocs = documents.filter(doc => !doc.parent);
     const childDocs = documents.filter(doc => doc.parent);
+
+    
 
     // 부모 자식 구분하여 렌더링
     const renderTree = (parentId, container) => {
@@ -60,11 +65,10 @@ export async function initFitness() {
 
           ulInDepth.appendChild(li);
           renderTree(doc.id, ulInDepth);
-        })
+      })
     }
 
-      // 최신순으로 역순 정렬
-      documents.reverse();
+      
       
       rootDocs.forEach(doc => {
         logList.insertAdjacentHTML('beforeend', createLogItem(doc.id, doc.title));
@@ -152,7 +156,7 @@ export async function initFitness() {
     if (!confirm("정말 삭제하시겠습니까?")) return;
 
     const li = deleteBtn.closest('li');
-    const parentUl = li.parentElement;
+    const parentUl = li.parentElement.classList.contains('in_depth');
 
     const docId = li.querySelector('.log_doc_item').dataset.id;
     await deleteDocument(docId);

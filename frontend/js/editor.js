@@ -214,7 +214,7 @@ function createEditorInPopup(container, memoId) {
     createEditorInPopup(container, memoId);
   });
   saveBtn.addEventListener("click", (e) => handleSaveBtn(e, memoId));
-  deleteBtn.addEventListener("click", handleDeleteBtn);
+  // deleteBtn.addEventListener("click", handleDeleteBtn);
   deleteBtn.addEventListener("click", (e) => handleDeleteBtn(memoId));
 }
 

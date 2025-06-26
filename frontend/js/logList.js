@@ -42,47 +42,47 @@ export async function initFitness() {
     const rootDocs = documents.filter(doc => !doc.parent);
     const childDocs = documents.filter(doc => doc.parent);
 
-  // 부모 자식 구분하여 렌더링
-  const renderTree = (parentId, container) => {
-    childDocs
-      .filter(doc => doc.parent === parentId)
-      .forEach(doc => {
-        const li = document.createElement("li");
-        li.innerHTML = createLogItemInDepth(doc.id, doc.title);
+    // 부모 자식 구분하여 렌더링
+    const renderTree = (parentId, container) => {
+      childDocs
+        .filter(doc => doc.parent === parentId)
+        .forEach(doc => {
+          const li = document.createElement("li");
+          li.innerHTML = createLogItemInDepth(doc.id, doc.title);
 
-        const parentLi = container.querySelector(`[data-id="${parentId}"]`).closest('li');
-        let ulInDepth = parentLi.querySelector('ul.in_depth');
+          const parentLi = container.querySelector(`[data-id="${parentId}"]`).closest('li');
+          let ulInDepth = parentLi.querySelector('ul.in_depth');
+          if (!ulInDepth) {
+            ulInDepth = document.createElement('ul');
+            ulInDepth.classList.add('in_depth');
+            parentLi.appendChild(ulInDepth);
+          }
+
+          ulInDepth.appendChild(li);
+          renderTree(doc.id, ulInDepth);
+        })
+    }
+
+      // 최신순으로 역순 정렬
+      documents.reverse();
+      
+      rootDocs.forEach(doc => {
+        logList.insertAdjacentHTML('beforeend', createLogItem(doc.id, doc.title));
+      });
+      rootDocs.forEach(doc => renderTree(doc.id, logList));
+
+      // arrow 버튼 처리
+      logList.querySelectorAll('li').forEach(li => {
+        const arrowBtn = li.querySelector('.arrow');
+        const ulInDepth = li.querySelector('ul.in_depth');
         if (!ulInDepth) {
-          ulInDepth = document.createElement('ul');
-          ulInDepth.classList.add('in_depth');
-          parentLi.appendChild(ulInDepth);
+          arrowBtn.setAttribute('disabled', '');
+          arrowBtn.classList.remove('rotate');
+        } else {
+          arrowBtn.removeAttribute('disabled');
         }
-
-        ulInDepth.appendChild(li);
-        renderTree(doc.id, ulInDepth);
-      })
-  }
-
-    // 최신순으로 역순 정렬
-    documents.reverse();
-    
-    rootDocs.forEach(doc => {
-      logList.insertAdjacentHTML('beforeend', createLogItem(doc.id, doc.title));
-    });
-    rootDocs.forEach(doc => renderTree(doc.id, logList));
-
-    // arrow 버튼 처리
-    logList.querySelectorAll('li').forEach(li => {
-      const arrowBtn = li.querySelector('.arrow');
-      const ulInDepth = li.querySelector('ul.in_depth');
-      if (!ulInDepth) {
-        arrowBtn.setAttribute('disabled', '');
-        arrowBtn.classList.remove('rotate');
-      } else {
-        arrowBtn.removeAttribute('disabled');
-      }
-    });
-  }
+      });
+    }
 
   // 문서 추가
   async function handleClickLogAddBtn(e) {

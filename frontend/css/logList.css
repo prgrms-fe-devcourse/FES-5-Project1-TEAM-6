@@ -108,8 +108,12 @@
   display: flex;
   gap: 10px;
 }
+
 .log_list .in_depth > li {
   padding-left: 36px;
+  .add_btn {
+    display: none;
+  }
 }
 
 .log_list .arrow.rotate {

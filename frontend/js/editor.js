@@ -64,24 +64,20 @@ function handleSaveBtn(e, memoId) {
 }
 
 /*-- delete Event: DELETE 통신 --*/
-function handleDeleteBtn() {
-  const textarea = document.querySelector("textarea");
-  if (!textarea.value.trim()) return alert("삭제할 내용이 없습니다!");
+function handleDeleteBtn(memoId) {
+  // const textarea = document.querySelector("textarea");
+  // if (!textarea.value.trim()) return alert("삭제할 내용이 없습니다!");
   if (!confirm("정말 삭제하시겠습니까?")) return;
-  function handleDeleteBtn(memoId) {
-    // const textarea = document.querySelector("textarea");
-    // if (!textarea.value.trim()) return alert("삭제할 내용이 없습니다!");
-    if (!confirm("정말 삭제하시겠습니까?")) return;
 
-    fetch(`http://localhost:3000/fitnessLogs/${memoId}`, {
-      method: "DELETE",
-    }).then((res) => {
-      if (!res.ok) throw new Error("삭제 실패");
-      alert("삭제 완료!");
-      document.querySelector(".popup_diary_card_container")?.remove();
-      document.body.style.overflow = "";
-    });
-  }
+  fetch(`http://localhost:3000/fitnessLogs/${memoId}`, {
+    method: "DELETE",
+  }).then((res) => {
+    if (!res.ok) throw new Error("삭제 실패");
+    alert("삭제 완료!");
+    document.querySelector(".popup_diary_card_container")?.remove();
+    document.body.style.overflow = "";
+  });
+  closePopup();
 }
 
 /*----------localStorage--------- */

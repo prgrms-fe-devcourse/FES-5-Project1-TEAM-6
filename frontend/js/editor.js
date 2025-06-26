@@ -10,7 +10,7 @@ if (urlId) {
 
 //state 초기화(기본값)
 let state = {
-    title: "운동 기록",
+    title: "새 운동 기록",
     content: "",
     date: new Date().toISOString(),
     isEditing: !memoId, // 새로운글이면 true,기존글이면 false
@@ -38,11 +38,11 @@ function handleSaveBtn(e, memoId) {
     
     const content = textarea ? textarea.value.trim() : state.content;
     const titleText = title.textContent.trim();
-    if (!content) return alert("내용을 입력해주세요!");
+    // if (!content) return alert("내용을 입력해주세요!");
 
     const data = {
-      title: titleText || "제목 없음",
-      content,
+      title: titleText || "새 운동 기록",
+      content: content || "",
       date: new Date().toISOString(),
     };
 
@@ -64,9 +64,9 @@ function handleSaveBtn(e, memoId) {
   }
 
 /*-- delete Event: DELETE 통신 --*/
-function handleDeleteBtn() {
-    const textarea = document.querySelector("textarea");
-    if (!textarea.value.trim()) return alert("삭제할 내용이 없습니다!");
+function handleDeleteBtn(memoId) {
+    // const textarea = document.querySelector("textarea");
+    // if (!textarea.value.trim()) return alert("삭제할 내용이 없습니다!");
     if (!confirm("정말 삭제하시겠습니까?")) return;
 
     fetch(`http://localhost:3000/fitnessLogs/${memoId}`, {
@@ -77,6 +77,7 @@ function handleDeleteBtn() {
       document.querySelector(".popup_diary_card_container")?.remove();
       document.body.style.overflow = "";
     });
+    closePopup();
 }
 
 /*----------localStorage--------- */
@@ -106,8 +107,13 @@ function createPopupContainer() {
 /*-- 팝업 내부 에디터 생성 --*/
 function createEditorInPopup(container, memoId) {
   container.innerHTML = "";
-  const backdrop = document.createElement("div");
-  backdrop.className = "popup_backdrop";
+
+  const backdrop = document.querySelector('.popup_backdrop');
+  if (!backdrop) {
+    const newBackdrop = document.createElement("div");
+    newBackdrop.className = "popup_backdrop";
+    document.body.appendChild(newBackdrop);
+  }
 
   const wrapper = document.createElement("div");
   wrapper.id = "editor_wrapper";
@@ -185,7 +191,6 @@ function createEditorInPopup(container, memoId) {
   wrapper.prepend(closeBtn);
   editorArea.appendChild(preview);
   container.appendChild(wrapper);
-  document.body.appendChild(backdrop);
 
 
   // 작성 중인 글 localStorage에 저장
@@ -209,7 +214,7 @@ function createEditorInPopup(container, memoId) {
     createEditorInPopup(container, memoId);
   });
   saveBtn.addEventListener("click", (e) => handleSaveBtn(e, memoId));
-  deleteBtn.addEventListener("click", handleDeleteBtn);
+  deleteBtn.addEventListener("click", (e) => handleDeleteBtn(memoId));
 
 }
 
@@ -221,7 +226,7 @@ function newDiaryEditor(memoId) {
   const savedContent = localStorage.getItem(`draft-${memoId}`) || "";
 
   state = {
-    title: "운동 기록",
+    title: "새 운동 기록",
     content: savedContent,
     date: new Date().toISOString(),
     isEditing: true,
@@ -302,7 +307,9 @@ function renderDiaryPopup(memoId) {
       // localStorage에 저장된 값 있는지 확인
       const localData = localStorage.getItem(`draft-${memoId}`);
       if (localData) {
-        data.content = localData; // 저장된 값이 있으면 덮어쓰기
+        const { title, content } = JSON.parse(localData);
+        data.title = title;
+        data.content = content; // 저장된 값이 있으면 덮어쓰기
       }
 
       // 데이터 불러오기 성공하면 화면에 popup container 렌더링

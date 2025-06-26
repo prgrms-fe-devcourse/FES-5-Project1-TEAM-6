@@ -1,19 +1,17 @@
 {
   "fitnessLogs": [
     {
-      "id": "a5fe",
-      "title": "신규 생성 1",
-      "content": "",
-      "date": "2025-06-26T01:04:46.010Z"
+      "id": "e0fd",
+      "title": "새 운동 기록",
+      "content": ""
     },
     {
-      "id": "ad9d",
-      "title": "신규 생성 2",
-      "content": "테스트 2222",
-      "date": "2025-06-26T01:04:58.992Z"
+      "id": "93b1",
+      "title": "새 운동 기록",
+      "content": ""
     },
     {
-      "id": "1ecc",
+      "id": "8c45",
       "title": "새 운동 기록",
       "content": ""
     }

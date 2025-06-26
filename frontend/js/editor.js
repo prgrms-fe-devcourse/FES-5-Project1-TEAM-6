@@ -190,7 +190,6 @@ function createEditorInPopup(container, memoId) {
   wrapper.prepend(closeBtn);
   editorArea.appendChild(preview);
   container.appendChild(wrapper);
-  document.body.appendChild(backdrop);
 
   // 작성 중인 글 localStorage에 저장
   textarea.addEventListener("input", () => {

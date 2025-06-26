@@ -1,6 +1,6 @@
 import { insertFitnessLogTemplate } from '../dom/fitnessLogTemplate.js';
 import { initFitness } from '../logList.js';
-import { handlePopupEvents } from "../../js/editor.js"
+import { handlePopupEvents } from "../editor.js"
 
 
 export function renderFitnessLog($container) {

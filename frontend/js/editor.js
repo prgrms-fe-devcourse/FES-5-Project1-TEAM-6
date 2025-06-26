@@ -144,7 +144,7 @@ function createEditorInPopup(container, memoId) {
 
   const buttonGroup = document.createElement("div");
   buttonGroup.className = "button_group";
-  buttonGroup.append(saveBtn, deleteBtn, editBtn);
+  buttonGroup.append(deleteBtn, editBtn, saveBtn);
 
   const titleArea = document.createElement("div");
   titleArea.className = "title_area";

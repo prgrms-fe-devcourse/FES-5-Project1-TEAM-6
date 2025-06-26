@@ -40,6 +40,7 @@ function handleSaveBtn(e, memoId) {
   if (!content) return alert("내용을 입력해주세요!");
 
   const data = {
+    id: memoId,
     title: titleText || "새 운동 기록",
     content: content || "",
     date: new Date().toISOString(),

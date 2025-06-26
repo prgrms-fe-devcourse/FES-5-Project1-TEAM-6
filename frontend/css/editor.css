@@ -68,7 +68,7 @@ body {
 .button_group {
   display: flex;
   margin-top: 20px;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 20px;
 }
 
@@ -91,6 +91,10 @@ body {
 
 #delete_btn {
   background-color: #ff5055;
+}
+
+#save_btn {
+  background-color: var(--c-dark);
 }
 
 #save_btn:hover,

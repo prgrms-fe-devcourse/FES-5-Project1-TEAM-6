@@ -15,6 +15,11 @@ let state = {
   date: new Date().toISOString(),
   isEditing: !memoId, // 새로운글이면 true,기존글이면 false
 };
+    title: "새 운동 기록",
+    content: "",
+    date: new Date().toISOString(),
+    isEditing: !memoId, // 새로운글이면 true,기존글이면 false
+  };
 
 /*-- 작성일 포맷팅 --*/
 function formatKoreanDate(dateString) {
@@ -44,6 +49,11 @@ function handleSaveBtn(e, memoId) {
     content,
     date: new Date().toISOString(),
   };
+    const data = {
+      title: titleText || "새 운동 기록",
+      content: content || "",
+      date: new Date().toISOString(),
+    };
 
   const url = `http://localhost:3000/fitnessLogs/${memoId}`;
 
@@ -67,6 +77,10 @@ function handleDeleteBtn() {
   const textarea = document.querySelector("textarea");
   if (!textarea.value.trim()) return alert("삭제할 내용이 없습니다!");
   if (!confirm("정말 삭제하시겠습니까?")) return;
+function handleDeleteBtn(memoId) {
+    // const textarea = document.querySelector("textarea");
+    // if (!textarea.value.trim()) return alert("삭제할 내용이 없습니다!");
+    if (!confirm("정말 삭제하시겠습니까?")) return;
 
   fetch(`http://localhost:3000/fitnessLogs/${memoId}`, {
     method: "DELETE",
@@ -104,8 +118,13 @@ function createPopupContainer() {
 /*-- 팝업 내부 에디터 생성 --*/
 function createEditorInPopup(container, memoId) {
   container.innerHTML = "";
-  const backdrop = document.createElement("div");
-  backdrop.className = "popup_backdrop";
+
+  const backdrop = document.querySelector('.popup_backdrop');
+  if (!backdrop) {
+    const newBackdrop = document.createElement("div");
+    newBackdrop.className = "popup_backdrop";
+    document.body.appendChild(newBackdrop);
+  }
 
   const wrapper = document.createElement("div");
   wrapper.id = "editor_wrapper";
@@ -185,6 +204,7 @@ function createEditorInPopup(container, memoId) {
   container.appendChild(wrapper);
   document.body.appendChild(backdrop);
 
+
   // 작성 중인 글 localStorage에 저장
   textarea.addEventListener("input", () => {
     preview.innerHTML = window.marked.parse(textarea.value);
@@ -207,6 +227,8 @@ function createEditorInPopup(container, memoId) {
   });
   saveBtn.addEventListener("click", (e) => handleSaveBtn(e, memoId));
   deleteBtn.addEventListener("click", handleDeleteBtn);
+  deleteBtn.addEventListener("click", (e) => handleDeleteBtn(memoId));
+
 }
 
 /*-- 새 글 작성 --*/
@@ -217,7 +239,7 @@ function newDiaryEditor(memoId) {
   const savedContent = localStorage.getItem(`draft-${memoId}`) || "";
 
   state = {
-    title: "운동 기록",
+    title: "새 운동 기록",
     content: savedContent,
     date: new Date().toISOString(),
     isEditing: true,
@@ -298,7 +320,9 @@ function renderDiaryPopup(memoId) {
       // localStorage에 저장된 값 있는지 확인
       const localData = localStorage.getItem(`draft-${memoId}`);
       if (localData) {
-        data.content = localData; // 저장된 값이 있으면 덮어쓰기
+        const { title, content } = JSON.parse(localData);
+        data.title = title;
+        data.content = content; // 저장된 값이 있으면 덮어쓰기
       }
 
       // 데이터 불러오기 성공하면 화면에 popup container 렌더링
@@ -326,4 +350,4 @@ export function handlePopupEvents(e) {
   if (!targetBtn || buttons) return;
   const documentId = targetBtn.dataset.id;
   renderDiaryPopup(documentId);
-}
+}}

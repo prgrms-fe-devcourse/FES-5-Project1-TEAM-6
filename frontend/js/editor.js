@@ -14,6 +14,7 @@ let state = {
     content: "",
     date: new Date().toISOString(),
     isEditing: !memoId, // 새로운글이면 true,기존글이면 false
+    parent: null
   };
 
 
@@ -45,6 +46,7 @@ function handleSaveBtn(e, memoId) {
       title: titleText || "새 운동 기록",
       content: content || "",
       date: new Date().toISOString(),
+      parent: state.parent || null
     };
 
     const url = `http://localhost:3000/fitnessLogs/${memoId}`;
@@ -220,7 +222,7 @@ function createEditorInPopup(container, memoId) {
 }
 
 /*-- 새 글 작성 --*/
-function newDiaryEditor(memoId) {
+function newDiaryEditor(memoId, parentId = null) {
   history.replaceState({}, "", `?id=${memoId}`);
 
   // localStorage 에 저장된 값 있으면 불러오기
@@ -231,6 +233,7 @@ function newDiaryEditor(memoId) {
     content: savedContent,
     date: new Date().toISOString(),
     isEditing: true,
+    parent: parentId
   };
 
   // 팝업창 렌더링
@@ -301,7 +304,7 @@ function renderDiaryPopup(memoId) {
     .then((data) => {
       if (!data.content || data.content.trim() === "") {
         // 새 글 작성 상태로 진입
-        newDiaryEditor(data.id);
+        newDiaryEditor(data.id, data.parent);
         return;
       }
 
@@ -314,7 +317,7 @@ function renderDiaryPopup(memoId) {
       }
 
       // 데이터 불러오기 성공하면 화면에 popup container 렌더링
-      state = { ...data, isEditing: false };
+      state = { ...data, isEditing: false, parent: data.parent || null };
 
       history.replaceState({}, "", `?id=${data.id}`);
 

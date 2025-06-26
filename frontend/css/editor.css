@@ -254,6 +254,9 @@
 	background: transparent;
 	padding: 0;
 	margin: 0;
+	margin-right: 40px;
+	max-height: 100px;
+	overflow-y: auto;
 }
 
 .note_meta {
@@ -270,8 +273,8 @@
 	display: flex;
 	flex-direction: row; /* 기본값이긴 하지만 명시해주자 */
 	gap: 1rem;
-	height: calc(95vh - 300px);
-	max-height: 500px;
+	height: calc(95vh - 350px);
+	max-height: 450px;
 }
 /* 왼쪽: 마크다운 입력창 */
 #markdown_input {
@@ -310,6 +313,10 @@
 		padding-right: 20px;
 	}
 
+	#note_title {
+		font-size: 1rem;
+		max-height: 52px;
+	}
 	#markdown_input,
 	#preview_area {
 		margin-bottom: 1rem;

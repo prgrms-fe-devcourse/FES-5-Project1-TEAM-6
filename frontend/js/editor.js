@@ -108,6 +108,10 @@ function createPopupContainer() {
 
 /*-- 팝업 내부 에디터 생성 --*/
 function createEditorInPopup(container, memoId, state) {
+
+  /* 스크롤 막기 */
+  document.body.style.overflow = "hidden";
+
   container.innerHTML = "";
 
   const backdrop = document.querySelector('.popup_backdrop');
@@ -124,8 +128,6 @@ function createEditorInPopup(container, memoId, state) {
   title.contentEditable = true;
   title.id = "note_title";
   title.textContent = state.title;
-  console.log("state.title before render:", state.title);
-
 
   const closeBtn = document.createElement("button");
   closeBtn.className = "popup_diary_close_button";
@@ -283,6 +285,7 @@ const closePopup = () => {
   const popupContainer = document.querySelector(".popup_diary_card_container");
   popupContainer?.remove();
   document.querySelector('.popup_backdrop')?.remove();
+
   // 스크롤 및 pathname 복구 
   document.body.style.overflow = "";
   history.replaceState({}, "", location.pathname);
@@ -340,12 +343,10 @@ function renderDiaryPopup(memoId) {
 
       const popupContainer = createPopupContainer();
       createEditorInPopup(popupContainer, data.id, state);
-      /* 스크롤 막기 */
-      document.documentElement.style.overflow = "hidden";
-      document.body.style.overflow = "hidden";
 
       requestAnimationFrame(() => {
         popupContainer.classList.add("show");
+        
         handleDiaryPopupClose();
       });
     })

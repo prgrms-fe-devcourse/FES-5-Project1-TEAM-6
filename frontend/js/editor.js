@@ -323,6 +323,9 @@ function renderDiaryPopup(memoId) {
 
       const popupContainer = createPopupContainer();
       createEditorInPopup(popupContainer, data.id);
+      /* 스크롤 막기 */
+      document.body.style.overflow = "hidden";
+
       requestAnimationFrame(() => {
         popupContainer.classList.add("show");
         handleDiaryPopupClose();

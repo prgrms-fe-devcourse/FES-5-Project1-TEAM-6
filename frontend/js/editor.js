@@ -200,6 +200,7 @@ function createEditorInPopup(container, memoId, state) {
   // 작성 중인 글 localStorage에 저장
   textarea.addEventListener("input", () => {
     preview.innerHTML = window.marked.parse(textarea.value);    
+    preview.scrollTop = preview.scrollHeight; // preview 자동 스크롤
     saveDraftToLocalStorage(memoId, title, textarea);
   });
   title.addEventListener("keydown", () => {

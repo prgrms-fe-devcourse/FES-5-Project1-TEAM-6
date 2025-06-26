@@ -76,46 +76,10 @@
       "parent": null
     },
     {
-      "id": "4660",
+      "id": "e6d6",
       "title": "새 운동 기록",
       "content": "",
-      "parent": null
-    },
-    {
-      "id": "fcdb",
-      "title": "새 운동 기록",
-      "content": "",
-      "parent": null
-    },
-    {
-      "id": "d02f",
-      "title": "새 운동 기록",
-      "content": "",
-      "parent": null
-    },
-    {
-      "id": "54c7",
-      "title": "새 운동 기록",
-      "content": "",
-      "parent": null
-    },
-    {
-      "id": "6f0f",
-      "title": "새 운동 기록",
-      "content": "",
-      "parent": null
-    },
-    {
-      "id": "3c24",
-      "title": "새 운동 기록",
-      "content": "",
-      "parent": null
-    },
-    {
-      "id": "859f",
-      "title": "새 운동 기록",
-      "content": "",
-      "parent": null
+      "parent": "859f"
     }
   ]
 }

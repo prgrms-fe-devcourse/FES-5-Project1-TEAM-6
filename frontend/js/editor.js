@@ -1,3 +1,4 @@
+import { initFitness } from "./logList.js";
 import { renderFitnessLog } from "./pages/fitnessLog.js"
 
 const urlParams = new URLSearchParams(location.search);
@@ -281,7 +282,7 @@ function editTitle(container, memoId, state) {
 }
 
 /*-- 팝업 닫기 --*/
-const closePopup = () => {
+const closePopup = async () => {
   const popupContainer = document.querySelector(".popup_diary_card_container");
   popupContainer?.remove();
   document.querySelector('.popup_backdrop')?.remove();
@@ -292,7 +293,9 @@ const closePopup = () => {
 
   // 목록 리렌더링
   const contentsList = document.querySelector(".log_section");
-  renderFitnessLog(contentsList);
+  // renderFitnessLog(contentsList);
+  const { initFitness } = await import('./pages/fitnessLog.js');
+  initFitness()
 }
   // ESC 누를 시 동작
 function handleDiaryPopupClose() {

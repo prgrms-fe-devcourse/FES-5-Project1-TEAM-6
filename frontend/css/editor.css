@@ -202,19 +202,19 @@
 @media (max-width: 768px) {
 	#editor_wrapper {
 		max-height: none;
-
+		padding: 1rem;
 	}
 	.editor_area {
 		flex-direction: column;
 		height: calc(95vh - 320px);
 		overflow-y: auto;
+		padding-right: 20px;
 	}
 	
 	#markdown_input,
 	#preview_area {
 		margin-bottom: 1rem;
-		overflow-y: hidden;
-		min-height: auto;
+		min-height: 200px;
 	}
 
 	.note_meta {

@@ -9,15 +9,15 @@ tabMenuList = [...tabMenuList];
 tabContList = [...tabContList];
 
 const categories = ['등', '팔', '가슴', '하체', '유산소'];
-const itemsPerLoad = 6;       // 처음 보여줄 카드 수
-const moreItemsPerClick = 6;  // 더보기 클릭 시 추가할 카드 수
+const itemsPerLoad = 6;  // 처음 카드 수
+const moreItemsPerClick = 6; // 더보기 시 추가 할 갯수
 
-// 각 카테고리별 현재 보여진 카드 수 저장
+// 카테고리별 보여진 카드 갯수
 const getShownCount = {};
 categories.forEach(cate => getShownCount[cate] = itemsPerLoad);
 
 
-/* 탭 메뉴 클릭 이벤트 */
+/* 탭 메뉴 클릭 시 */
 function handleTabMenu(e) {
   e.preventDefault();
 
@@ -33,7 +33,7 @@ function handleTabMenu(e) {
   setMoreBtnVisible(index);
 }
 
-/* 탭 컨텐츠 전체 초기 렌더링 */
+/* 탭 컨텐츠 전체 렌더링 */
 function renderAllTabContents() {
   categories.forEach((category, index) => {
     const filtered = data.filter(item => item.category === category);
@@ -58,7 +58,7 @@ function setMoreBtnVisible(tabIndex) {
   }
 }
 
-/* 더보기 버튼 클릭 이벤트 */
+/* 더보기 버튼 클릭 시 */
 function handleMoreClick(e) {
   const activeIndex = tabMenuList.findIndex(tab => tab.classList.contains('active'));
 

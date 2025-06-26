@@ -1,3 +1,5 @@
+import { route } from './router/router.js';
+
 const header = document.querySelector('.main_header');
 let lastScroll = 0;
 
@@ -48,14 +50,41 @@ closeMenuBtn.addEventListener('click', () => {
 // 클릭한 메뉴에 active 추가
 document.addEventListener('DOMContentLoaded', () => {
   const menuItems = document.querySelectorAll('a.menu_item');
-  const currentPath = window.location.pathname;
 
+  function setActiveMenu() {
+    const currentPath = location.pathname;
+
+    menuItems.forEach(item => {
+      const itemPath = item.getAttribute('href');
+      if (itemPath === currentPath) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  }
+
+  // 메뉴 클릭 시 active 설정 (라우팅 후) 
   menuItems.forEach(item => {
-    const href = item.getAttribute('href');
-    if (href === currentPath) {
-      item.classList.add('active');
-    } else {
-      item.classList.remove('active');
-    }
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const href = item.getAttribute('href');
+
+
+      history.pushState(null, '', href);
+
+      route();
+
+      setActiveMenu();
+    });
   });
+
+  window.addEventListener('popstate', () => {
+    route();         
+    setActiveMenu();
+  });
+
+  // 초기 로딩 시 active 설정
+  setActiveMenu();
 });

@@ -36,7 +36,7 @@ export async function initFitness() {
     `;
   }
 
-  // 문서 불러와서 렌더링 시 자식이 없으면 disabled 유지
+  /* 문서 불러와서 렌더링 */
   async function loadLogsFromServer() {
     const documents = await fetchDocuments();
     const rootDocs = documents.filter(doc => !doc.parent);
@@ -84,7 +84,7 @@ export async function initFitness() {
       });
     }
 
-  // 문서 추가
+  /* 문서 추가 */
   async function handleClickLogAddBtn(e) {
     e.preventDefault();
     const btn = e.target.closest('#logAddBtn');
@@ -102,7 +102,7 @@ export async function initFitness() {
     logList.insertAdjacentHTML('afterbegin', createLogItem(newDoc.id, newDoc.title));
   }
 
-  // 하위 문서 추가
+  /* 하위 문서 추가 */
   async function handleClickLogAddBtnInDepth(li, e) {
     e.preventDefault();
 
@@ -133,7 +133,7 @@ export async function initFitness() {
     }
   }
 
-  // 하위 페이지 추가 버튼 클릭 핸들러
+  /* 하위 페이지 추가 버튼 클릭 핸들러 */
   function handleAddItem(e) {
     e.preventDefault();
     const addBtn = e.target.closest('.add_btn');
@@ -174,7 +174,7 @@ export async function initFitness() {
     }
   }
 
-  // 아코디언 토글
+  /* 아코디언 토글 */
   function toggleAccordion(e) {
     e.preventDefault();
 

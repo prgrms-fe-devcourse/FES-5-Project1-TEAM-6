@@ -93,9 +93,10 @@ npm run start             // 서버와 클라이언트 동시 실행
 <br/>
 
 ## 📸 화면 예시
-
+- Home 화면
 ![메인화면](https://github.com/user-attachments/assets/1b6cfb49-023c-4b76-a033-2f8feca9db50)
-
+- Fitness Log 화면
+![운동기록화면](https://github.com/user-attachments/assets/0fa204b6-427a-4c0a-b821-76e5e20d7bee)
 ※ 위 이미지는 프로젝트 실제 실행 화면입니다.
 
 <br/>

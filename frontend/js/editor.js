@@ -31,7 +31,7 @@ function formatKoreanDate(dateString) {
 
 /*---------- fetch 통신 ----------*/
 /*-- save Event: PUT --*/
-function handleSaveBtn(e, memoId) {
+function handleSaveBtn(e, memoId, state) {
     e.preventDefault();
     const textarea = document.querySelector("textarea");
     const title = document.querySelector("#note_title");
@@ -62,7 +62,7 @@ function handleSaveBtn(e, memoId) {
         localStorage.removeItem(`draft-${memoId}`);
         state = { ...resData, isEditing: false };
 
-        createEditorInPopup(popupContainer, memoId);
+        createEditorInPopup(popupContainer, memoId, state);
       });
   }
 
@@ -84,7 +84,6 @@ function handleDeleteBtn(memoId) {
 }
 
 /*----------localStorage--------- */
-// SPA라 새로고침이 의미는 없지만 일단...
 function saveDraftToLocalStorage(memoId, title="", textarea="") {
   const draftKey = `draft-${memoId}`;
 
@@ -108,7 +107,7 @@ function createPopupContainer() {
 }
 
 /*-- 팝업 내부 에디터 생성 --*/
-function createEditorInPopup(container, memoId) {
+function createEditorInPopup(container, memoId, state) {
   container.innerHTML = "";
 
   const backdrop = document.querySelector('.popup_backdrop');
@@ -125,6 +124,8 @@ function createEditorInPopup(container, memoId) {
   title.contentEditable = true;
   title.id = "note_title";
   title.textContent = state.title;
+  console.log("state.title before render:", state.title);
+
 
   const closeBtn = document.createElement("button");
   closeBtn.className = "popup_diary_close_button";
@@ -204,7 +205,7 @@ function createEditorInPopup(container, memoId) {
   title.addEventListener("keydown", () => {
     if (!state.isEditing) {
       state.isEditing = true;
-      editTitle(container, memoId);
+      editTitle(container, memoId, state);
     }
     saveDraftToLocalStorage(memoId, title, textarea);
   });
@@ -214,30 +215,32 @@ function createEditorInPopup(container, memoId) {
 
   editBtn.addEventListener("click", () => {
     state.isEditing = true;
-    createEditorInPopup(container, memoId);
+    createEditorInPopup(container, memoId, state);
   });
-  saveBtn.addEventListener("click", (e) => handleSaveBtn(e, memoId));
+  saveBtn.addEventListener("click", (e) => handleSaveBtn(e, memoId, state));
   deleteBtn.addEventListener("click", (e) => handleDeleteBtn(memoId));
 
 }
 
 /*-- 새 글 작성 --*/
-function newDiaryEditor(memoId, parentId = null) {
+function newDiaryEditor(memoId, parentId = null, serverData = {}) {
   history.replaceState({}, "", `?id=${memoId}`);
 
+  let savedTitle = serverData.title || "새 운동 기록";
+  let savedContent = serverData.content || "";
+
   // localStorage 에 저장된 값 있으면 불러오기
-  let savedTitle = "";
-  let savedContent = "";
   const localData = localStorage.getItem(`draft-${memoId}`);
+  
   if (localData) {
     const { title, content } = JSON.parse(localData);
-    savedTitle = title;
-    savedContent = content; // 저장된 값이 있으면 덮어쓰기
+    savedTitle = title || savedTitle;
+    savedContent = content || savedContent; // 저장된 값이 있으면 덮어쓰기
   }
    
   state = {
-    title: savedTitle || "새 운동 기록",
-    content: savedContent || "",
+    title: savedTitle,
+    content: savedContent,
     date: new Date().toISOString(),
     isEditing: true,
     parent: parentId
@@ -245,7 +248,7 @@ function newDiaryEditor(memoId, parentId = null) {
 
   // 팝업창 렌더링
   const popupContainer = createPopupContainer();
-  createEditorInPopup(popupContainer, memoId);
+  createEditorInPopup(popupContainer, memoId, state);
   requestAnimationFrame(() => {
     popupContainer.classList.add("show");
     handleDiaryPopupClose();
@@ -253,13 +256,13 @@ function newDiaryEditor(memoId, parentId = null) {
 }
 
 /*-- 제목 요소 수정 --*/
-function editTitle(container, memoId) {
+function editTitle(container, memoId, state) {
   // 수정 전 커서 위치 기억
   const selection = window.getSelection();
   const range = selection.getRangeAt(0);
   const cursorPos = range.startOffset;
 
-  createEditorInPopup(container, memoId);
+  createEditorInPopup(container, memoId, state);
 
   // 렌더링 후 다시 포커스 + 커서 이동
   requestAnimationFrame(() => {
@@ -309,27 +312,33 @@ function renderDiaryPopup(memoId) {
       return res.json();
     })
     .then((data) => {
-      if (!data.content || data.content.trim() === "") {
+      state = { 
+        id: data.id || memoId,
+        title: data.title || "새 운동 기록", 
+        content: data.content || "",
+        date: data.date,
+        parent: data.parent || null,
+        isEditing: false  };
+
+      if (!state.content || state.content.trim() === "") {
         // 새 글 작성 상태로 진입
-        newDiaryEditor(data.id, data.parent);
+        newDiaryEditor(data.id, data.parent, data);
         return;
       }
 
       // localStorage에 저장된 값 있는지 확인
-      const localData = localStorage.getItem(`draft-${memoId}`);
+      const localData = localStorage.getItem(`draft-${data.id}`);
       if (localData) {
         const { title, content } = JSON.parse(localData);
-        data.title = title;
-        data.content = content; // 저장된 값이 있으면 덮어쓰기
+        state.title = title;
+        state.content = content; // 저장된 값이 있으면 덮어쓰기
       }
 
       // 데이터 불러오기 성공하면 화면에 popup container 렌더링
-      state = { ...data, isEditing: false, parent: data.parent || null };
-
       history.replaceState({}, "", `?id=${data.id}`);
 
       const popupContainer = createPopupContainer();
-      createEditorInPopup(popupContainer, data.id);
+      createEditorInPopup(popupContainer, data.id, state);
       /* 스크롤 막기 */
       document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";

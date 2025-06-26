@@ -44,3 +44,15 @@ const closeMenuBtn = document.querySelector('.close_menu_btn');
 closeMenuBtn.addEventListener('click', () => {
   mobileMenu.classList.remove('active');
 });
+
+// 클릭한 메뉴에 active 추가
+document.addEventListener('DOMContentLoaded', () => {
+  const menuItems = document.querySelectorAll('a.menu_item');
+
+  menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+      menuItems.forEach(el => el.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+});

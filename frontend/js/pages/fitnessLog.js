@@ -1,9 +1,12 @@
 import { insertFitnessLogTemplate } from '../dom/fitnessLogTemplate.js';
 import { initFitness } from '../logList.js';
 import { handlePopupEvents } from "../editor.js"
+import { fetchDocuments } from '../api/fitnessApi.js';
 
 
-export function renderFitnessLog($container) {
+export async function renderFitnessLog($container) {
+  const documents = await fetchDocuments();
+
   const template = document.querySelector('#fitnessLogTemplate');
   if (!template) {
     insertFitnessLogTemplate();

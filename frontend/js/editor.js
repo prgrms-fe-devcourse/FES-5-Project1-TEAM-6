@@ -293,9 +293,7 @@ const closePopup = async () => {
 
   // 목록 리렌더링
   const contentsList = document.querySelector(".log_section");
-  // renderFitnessLog(contentsList);
-  const { initFitness } = await import('./pages/fitnessLog.js');
-  initFitness()
+  renderFitnessLog(contentsList);
 }
   // ESC 누를 시 동작
 function handleDiaryPopupClose() {

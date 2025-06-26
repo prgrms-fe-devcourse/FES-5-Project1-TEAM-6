@@ -226,11 +226,18 @@ function newDiaryEditor(memoId, parentId = null) {
   history.replaceState({}, "", `?id=${memoId}`);
 
   // localStorage 에 저장된 값 있으면 불러오기
-  const savedContent = localStorage.getItem(`draft-${memoId}`) || "";
-
+  let savedTitle = "";
+  let savedContent = "";
+  const localData = localStorage.getItem(`draft-${memoId}`);
+  if (localData) {
+    const { title, content } = JSON.parse(localData);
+    savedTitle = title;
+    savedContent = content; // 저장된 값이 있으면 덮어쓰기
+  }
+   
   state = {
-    title: "새 운동 기록",
-    content: savedContent,
+    title: savedTitle || "새 운동 기록",
+    content: savedContent || "",
     date: new Date().toISOString(),
     isEditing: true,
     parent: parentId
@@ -324,6 +331,7 @@ function renderDiaryPopup(memoId) {
       const popupContainer = createPopupContainer();
       createEditorInPopup(popupContainer, data.id);
       /* 스크롤 막기 */
+      document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
 
       requestAnimationFrame(() => {
